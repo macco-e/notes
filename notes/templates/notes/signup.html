@@ -1,0 +1,27 @@
+{% extends 'auth_base.html' %}
+{% load static %}
+
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'notes/style.css' %}">
+{% endblock css_link %}
+
+
+{% block title %}
+this is signup
+{% endblock title %}
+
+{% block content %}
+<form action="{% url 'notes:create_user' %}" method="POST" class="form-signin">
+    {% csrf_token %}
+    <h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
+
+  <label for="inputUsername" class="sr-only">Username</label>
+  <input type="username" id="inputEmail" name="username" class="form-control" placeholder="User name" required autofocus>
+
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+  <p class="mt-5 mb-3 text-muted">&copy; 2019</p>
+</form>
+{% endblock content %}
