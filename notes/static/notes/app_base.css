@@ -3,14 +3,29 @@ body {
 }
 
 .feather {
+  width: 60px;
+  height: 60px;
+  vertical-align: text-bottom;
+}
+
+.feather-calendar {
   width: 16px;
   height: 16px;
-  vertical-align: text-bottom;
+}
+
+.feather-lock {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
 }
 
 /*
  * Sidebar
  */
+
+.flex-column {
+  text-align: center;
+}
 
 .sidebar {
   position: fixed;
@@ -41,6 +56,7 @@ body {
 .sidebar .nav-link {
   font-weight: 500;
   color: #333;
+
 }
 
 .sidebar .nav-link .feather {
@@ -90,6 +106,7 @@ body {
 
 .navbar .form-control {
   padding: .75rem 1rem;
+  margin: 0 20px;
   border-width: 0;
   border-radius: 0;
 }
@@ -103,4 +120,16 @@ body {
 .form-control-dark:focus {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
+.edit-btn {
+ position: fixed;
+ bottom: 30px;
+ right: 30px;
+ z-index: 200;
+}
+
+.px-4 {
+  padding-left: 2rem!important;
+  padding-right: 7rem!important
 }
