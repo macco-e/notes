@@ -10,6 +10,10 @@
 notes Home
 {% endblock title %}
 
+{% block logout_link %}
+{% url 'notes:logout' %}
+{% endblock logout_link %}
+
 {% block content %}
 <!--{% for account in account_list %}-->
 <!--    <div class="container">-->

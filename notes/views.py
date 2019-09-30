@@ -43,16 +43,19 @@ def login_view(request):
                           {'error': 'ユーザ名かパスワードが間違っています'})
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('notes:login')
+
+
 def redirect_to(request):
     return render(request, 'notes/login.html')
 
 
 class HomeView(LoginRequiredMixin, ListView):
     login_url = '/login/'
-    redirect_field_name = 'notes:redirect_to'
-    model = Account
 
+    model = Account
     template_name = 'notes/home.html'
     context_object_name = 'account_list'
 
-    pass
