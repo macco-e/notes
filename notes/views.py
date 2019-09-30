@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.utils import IntegrityError
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
@@ -42,5 +43,16 @@ def login_view(request):
                           {'error': 'ユーザ名かパスワードが間違っています'})
 
 
-class HomeView(ListView):
+def redirect_to(request):
+    return render(request, 'notes/login.html')
+
+
+class HomeView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    redirect_field_name = 'notes:redirect_to'
+    model = Account
+
+    template_name = 'notes/home.html'
+    context_object_name = 'account_list'
+
     pass
