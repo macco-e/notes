@@ -7,8 +7,12 @@
 
 
 {% block title %}
-notes Home
+Home
 {% endblock title %}
+
+{% block top_username %}
+{{ user.get_username }}
+{% endblock top_username %}
 
 {% block logout_link %}
 {% url 'notes:logout' %}
