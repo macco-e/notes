@@ -133,3 +133,7 @@ body {
   padding-left: 2rem!important;
   padding-right: 7rem!important
 }
+
+.maincontent {
+ padding-top: 0;
+}

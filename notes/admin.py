@@ -29,6 +29,9 @@ class AccountAdmin(UserAdmin):
         ('Note', {'fields': ['icon', 'noted_num', 'noted_tables']}),
     ]
 
+    list_display = ('id', 'username', 'noted_num')
+    list_filter = ('id', 'username', 'noted_num')
+
 
 class FollowAdmin(admin.ModelAdmin):
     list_display = ('follow_id', 'follower_id')
