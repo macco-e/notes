@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'notes',
-    'django_mysql'
+    'django_mysql',
+    'markdownx'
 ]
 
 AUTH_USER_MODEL = 'notes.Account'

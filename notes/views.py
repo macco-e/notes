@@ -80,4 +80,11 @@ class UserDetailView(LoginRequiredMixin, ListView):
         return context
 
 
+class PostNoteView(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
+
+    model = NotesBetween20190930and20191006
+    template_name = 'notes/post_note.html'
+
+    fields = ['text']
 

@@ -122,16 +122,20 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
+/*
+ * Custom
+ */
+
 .edit-btn {
  position: fixed;
  bottom: 30px;
- right: 30px;
+ right: 40px;
  z-index: 200;
 }
 
 .px-4 {
-  padding-left: 2rem!important;
-  padding-right: 7rem!important
+  padding-left: 4rem!important;
+  padding-right: 9rem!important
 }
 
 .maincontent {
