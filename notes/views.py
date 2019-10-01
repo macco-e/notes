@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
 
-from .models import Account
+from .models import Account, Follow, NotesBetween20190930and20191006
 
 
 def sign_up_view(request):
@@ -55,7 +55,29 @@ def redirect_to(request):
 class HomeView(LoginRequiredMixin, ListView):
     login_url = '/login/'
 
-    model = Account
     template_name = 'notes/home.html'
-    context_object_name = 'account_list'
+    context_object_name = 'notes_list'
+
+    def get_queryset(self):
+        login_id = self.request.user.id
+        follows = Follow.objects.filter(follow_id=login_id)
+        target_list = [str(login_id)] + [str(f.follower_id.id) for f in follows]
+        return NotesBetween20190930and20191006.objects.filter(
+            noted_user_id__in=target_list).order_by('-created_at')
+
+
+class UserDetailView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    model = NotesBetween20190930and20191006
+    template_name = 'notes/detail.html'
+    context_object_name = 'notes_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['target_user'] = Account.objects.get(pk=self.kwargs['pk'])
+        context['notes_list'] = self.model.objects.filter(noted_user_id=self.kwargs['pk'])
+        return context
+
+
 

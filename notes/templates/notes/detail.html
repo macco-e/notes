@@ -7,7 +7,7 @@
 
 
 {% block title %}
-Home
+@{{ target_user }}
 {% endblock title %}
 
 {% block top_username %}
@@ -19,7 +19,7 @@ Home
 {% endblock logout_link %}
 
 {% block board_title %}
-Home
+@ {{ target_user }}
 {% endblock board_title %}
 
 {% block content %}
@@ -79,7 +79,6 @@ Home
   </div>
  </main>
 {% endblock content %}
-
 
 {% block js_link %}
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
