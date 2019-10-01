@@ -32,38 +32,37 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
+                <a class="nav-link active" href="{% block home_href %}{% endblock home_href %}">
                   <span data-feather="home"></span>
-                  <span class="sr-only">(current)</span>
                 </a>
               </li>
                 <p class>Home</p>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% block mail_href %}{% endblock mail_href %}">
                   <span data-feather="mail"></span>
                 </a>
               </li>
                 <p>Mail</p>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% block notifications_href %}{% endblock notifications_href %}">
                   <span data-feather="bell"></span>
                 </a>
               </li>
                 <p>Notifications</p>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% block search_href %}{% endblock search_href %}">
                   <span data-feather="search"></span>
                 </a>
               </li>
                 <p>Search</p>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% block user_href %}{% endblock user_href %}">
                   <span data-feather="user"></span>
                 </a>
               </li>
                 <p>User</p>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% block settings_href %}{% endblock settings_href %}">
                   <span data-feather="settings"></span>
                 </a>
               </li>

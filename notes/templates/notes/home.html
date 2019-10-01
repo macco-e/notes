@@ -18,6 +18,13 @@ Home
 {% url 'notes:logout' %}
 {% endblock logout_link %}
 
+{% block home_href %}{% endblock home_href %}
+{% block mail_href %}{% endblock mail_href %}
+{% block notifications_href %}{% endblock notifications_href %}
+{% block search_href %}{% endblock search_href %}
+{% block user_href %}{% endblock user_href %}
+{% block settings_href %}{% endblock settings_href %}
+
 {% block board_title %}
 Home
 {% endblock board_title %}
@@ -31,7 +38,7 @@ Home
           <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">
-                @{{ note.noted_user_id }}  {{ note.created_at.hour }}:{{ note.created_at.minute }}   {{ note.created_at.month }}/{{ note.created_at.day }}
+                <a href="{% url 'notes:detail' note.noted_user_id.id %}">@{{ note.noted_user_id }}</a>  {{ note.created_at.hour }}:{{ note.created_at.minute }}   {{ note.created_at.month }}/{{ note.created_at.day }}
             </strong>
             {{ note.text }}
           </p>
