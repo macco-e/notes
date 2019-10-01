@@ -42,11 +42,11 @@
 {% endblock search_href %}
 
 {% block user_href %}
-    {% url 'notes:detail' user.id%}
+    {% url 'notes:detail' user.id %}
 {% endblock user_href %}
 
 {% block settings_href %}
-    {% url 'notes:home' %}
+    {% url 'notes:settings' user.id %}
 {% endblock settings_href %}
 
 

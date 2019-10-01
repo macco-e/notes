@@ -1,10 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.utils import IntegrityError
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 
 from .models import Account, Follow, NotesBetween20190930and20191006
 
@@ -19,7 +18,7 @@ def create_user(request):
         password = request.POST['password']
         try:
             Account.objects.create_user(username, password=password)
-            return redirect('notes:signup')
+            return redirect('notes:login')
         except IntegrityError:
             return redirect('notes:signup')
 
@@ -87,4 +86,14 @@ class PostNoteView(LoginRequiredMixin, CreateView):
     template_name = 'notes/post_note.html'
 
     fields = ['text']
+
+
+class SettingsView(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
+
+    model = Account
+    template_name = 'notes/settings.html'
+    fields = ['username', 'icon']
+    success_url = reverse_lazy('notes:home')
+
 
