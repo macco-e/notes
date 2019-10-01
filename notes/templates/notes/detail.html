@@ -42,7 +42,7 @@
 {% endblock search_href %}
 
 {% block user_href %}
-    {% url 'notes:home' %}
+    {% url 'notes:detail' user.id %}
 {% endblock user_href %}
 
 {% block settings_href %}
@@ -54,6 +54,21 @@
 
 {% block board_title %}
 @ {{ target_user }}
+
+{% if is_follow %}
+<a href="{% url 'notes:unfollow' self_pk %}" class="btn btn-danger btn" role="button" aria-pressed="true">unfollow</a>
+{% else %}
+<a href="{% url 'notes:follow' self_pk %}" class="btn btn-primary btn" role="button" aria-pressed="true">follow</a>
+{% endif %}
+
+<button type="button" class="btn btn-success">
+  Follow <span class="badge badge-light">{{ num_follow }}</span>
+</button>
+
+<button type="button" class="btn btn-success">
+  Follower <span class="badge badge-light">{{ num_follower }}</span>
+</button>
+
 {% endblock board_title %}
 
 
