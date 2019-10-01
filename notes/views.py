@@ -74,8 +74,12 @@ class UserDetailView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['num_follow'] = Follow.objects.filter(follow_id=self.kwargs['pk']).count()
+        context['num_follower'] = Follow.objects.filter(follower_id=self.kwargs['pk']).count()
+        context['is_follow'] = Follow.objects.filter(follow_id=self.request.user.id).filter(follower_id=self.kwargs['pk']).count()
         context['target_user'] = Account.objects.get(pk=self.kwargs['pk'])
         context['notes_list'] = self.model.objects.filter(noted_user_id=self.kwargs['pk'])
+        context['self_pk'] = self.kwargs['pk']
         return context
 
 
@@ -97,3 +101,14 @@ class SettingsView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('notes:home')
 
 
+def follow(request, pk):
+    f = Follow.objects.create(follow_id=request.user,
+                              follower_id=Account.objects.get(pk=pk))
+    f.save()
+    return redirect('notes:detail', pk=pk)
+
+
+def unfollow(request, pk):
+    f = Follow.objects.filter(follow_id=request.user).filter(follower_id=pk)
+    f.delete()
+    return redirect('notes:detail', pk=pk)
