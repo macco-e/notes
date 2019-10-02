@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django_mysql.models import ListCharField
+from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 
 class Account(AbstractUser):
@@ -12,6 +14,24 @@ class Account(AbstractUser):
         blank=True
     )
     icon = models.ImageField(upload_to='icons', blank=True, default='icons/iconfinder_profle_1055000.png')
+
+    icon_small = ImageSpecField(
+        source='icon',
+        processors=[ResizeToFill(32, 32)],
+        format='JPEG',
+    )
+
+    icon_middle = ImageSpecField(
+        source='icon',
+        processors=[ResizeToFill(70, 70)],
+        format='JPEG'
+    )
+
+    icon_big = ImageSpecField(
+        source='icon',
+        processors=[ResizeToFill(150, 150)],
+        format='JPEG'
+    )
 
 
 class Follow(models.Model):

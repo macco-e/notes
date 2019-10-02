@@ -26,21 +26,23 @@ Settings @{{ user.get_username }}
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
       <div class="form-group">
-        <label for="inputUserName">User name : {{ user.get_username }}</label>
-        <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter new user name">
+        <label for="inputUserName">User name</label>
+        <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter new user name" value="{{ user.get_username }}">
         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
-      <div class="form-group">
-        <label for="inputPassword1">Password</label>
-        <input type="password" name="password" class="form-control" id="inputPassword1" placeholder="Password">
-      </div>
+<!--      <div class="form-group">-->
+<!--        <label for="inputPassword1">New Password</label>-->
+<!--        <input type="password" name="password" class="form-control" id="inputPassword1" placeholder="Password" value="{{ user.get_password }}">-->
+<!--      </div>-->
       <div class="form-group">
         <label for="iconFile">Icon</label>
-          <p><img src="{{ user.icon.url }}" alt="N" style="width:100px;height:100px;"></p>
-          <p><input type="file" name="icon"></p>
+          <p><img id="icon-preview" src="{{ user.icon_big.url }}" alt="N"></p>
+          <p><input type="file" name="icon" onchange="preview_img(this)"></p>
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
  </main>
+
+
 {% endblock content %}

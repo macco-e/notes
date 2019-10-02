@@ -179,6 +179,9 @@ class UsersListView(LoginRequiredMixin, ListView):
     template_name = 'notes/users.html'
     context_object_name = 'users_list'
 
+    # def get_context_data(self, **kwargs):
+
+
 
 def search_redirect(request):
     if request.POST['search_word']:
