@@ -9,6 +9,8 @@ from django.views.generic import ListView, DetailView, CreateView, DeleteView, U
 from .models import Account, Follow, NotesBetween20190930and20191006
 
 
+# auth -------------------------------------------------------------------------
+
 def sign_up_view(request):
     return render(request, 'notes/signup.html')
 
@@ -48,9 +50,7 @@ def logout_view(request):
     return redirect('notes:login')
 
 
-def redirect_to(request):
-    return render(request, 'notes/login.html')
-
+# Home--------------------------------------------------------------------------
 
 class HomeView(LoginRequiredMixin, ListView):
     login_url = '/login/'
@@ -65,6 +65,28 @@ class HomeView(LoginRequiredMixin, ListView):
         return NotesBetween20190930and20191006.objects.filter(
             noted_user_id__in=target_list).order_by('-created_at')
 
+
+def search_home_redirect(request):
+    if request.POST['search_word']:
+        return redirect('notes:home_notes_search', request.POST['search_word'])
+    else:
+        return redirect('notes:home')
+
+
+class HomeNotesSearchView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    template_name = 'notes/home.html'
+    context_object_name = 'notes_list'
+
+    def get_queryset(self):
+        login_id = self.request.user.id
+        follows = Follow.objects.filter(follow_id=login_id)
+        target_list = [str(login_id)] + [str(f.follower_id.id) for f in follows]
+        return NotesBetween20190930and20191006.objects.filter(
+            noted_user_id__in=target_list, text__contains=self.kwargs['search_word']).order_by('-created_at')
+
+# User -------------------------------------------------------------------------
 
 class UserDetailView(LoginRequiredMixin, ListView):
     login_url = '/login/'
@@ -84,25 +106,6 @@ class UserDetailView(LoginRequiredMixin, ListView):
         return context
 
 
-class PostNoteView(LoginRequiredMixin, CreateView):
-    login_url = '/login/'
-
-    model = NotesBetween20190930and20191006
-    template_name = 'notes/post_note.html'
-
-    fields = ['noted_user_id', 'text']
-    success_url = reverse_lazy('notes:home')
-
-
-class SettingsView(LoginRequiredMixin, UpdateView):
-    login_url = '/login/'
-
-    model = Account
-    template_name = 'notes/settings.html'
-    fields = ['username', 'icon']
-    success_url = reverse_lazy('notes:home')
-
-
 def follow(request, pk):
     f = Follow.objects.create(follow_id=request.user,
                               follower_id=Account.objects.get(pk=pk))
@@ -115,6 +118,34 @@ def unfollow(request, pk):
     f.delete()
     return redirect('notes:detail', pk=pk)
 
+
+def search_user_redirect(request, self_pk):
+    if request.POST['search_word']:
+        return redirect('notes:user_notes_search', self_pk=self_pk, search_word=request.POST['search_word'])
+    else:
+        return redirect('notes:detail', pk=self_pk)
+
+
+class UserNoteSearchView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    model = NotesBetween20190930and20191006
+    template_name = 'notes/detail.html'
+    context_object_name = 'notes_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['num_follow'] = Follow.objects.filter(follow_id=self.request.user.id).count()
+        context['num_follow'] = Follow.objects.filter(follow_id=self.request.user.id).count()
+        context['num_follower'] = Follow.objects.filter(follower_id=self.request.user.id).count()
+        context['is_follow'] = Follow.objects.filter(follow_id=self.request.user.id).filter(follower_id=self.kwargs['self_pk']).count()
+        context['target_user'] = Account.objects.get(pk=self.kwargs['self_pk'])
+        context['notes_list'] = self.model.objects.filter(noted_user_id=self.kwargs['self_pk'], text__contains=self.kwargs['search_word'])
+        context['self_pk'] = self.kwargs['self_pk']
+        return context
+
+
+# follow list ------------------------------------------------------------------
 
 class UserFollowListView(LoginRequiredMixin, ListView):
     login_url = '/login/'
@@ -138,3 +169,68 @@ class UserFollowerListView(LoginRequiredMixin, ListView):
         fs = Follow.objects.filter(follower_id=self.kwargs['pk'])
         followers = [str(f.follow_id.id) for f in fs]
         return Account.objects.filter(id__in=followers)
+
+# Users ------------------------------------------------------------------------
+
+class UsersListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    model = Account
+    template_name = 'notes/users.html'
+    context_object_name = 'users_list'
+
+
+def search_redirect(request):
+    if request.POST['search_word']:
+        return redirect('notes:users_search', request.POST['search_word'])
+    else:
+        return redirect('notes:users')
+
+
+class UsersSearchView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    model = Account
+    template_name = 'notes/users.html'
+    context_object_name = 'users_list'
+
+    # queryにマッチしたものだけ返す
+    def get_queryset(self):
+        return Account.objects.filter(username__contains=self.kwargs['search_word'])
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_word'] = self.kwargs['search_word']
+        return context
+
+# Settings----------------------------------------------------------------------
+
+class SettingsView(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
+
+    model = Account
+    template_name = 'notes/settings.html'
+    fields = ['username', 'icon']
+    success_url = reverse_lazy('notes:home')
+
+
+# Create -----------------------------------------------------------------------
+
+class PostNoteView(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
+
+    model = NotesBetween20190930and20191006
+    template_name = 'notes/post_note.html'
+
+    fields = ['noted_user_id', 'text']
+    success_url = reverse_lazy('notes:home')
+
+
+
+
+
+
+
+
+
+
