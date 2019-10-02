@@ -1,0 +1,85 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+<!--Head-->
+
+{% block css_link %}
+  <link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
+{% endblock css_link %}
+
+{% block title %}
+  Home
+{% endblock title %}
+
+
+<!--Nav bar-->
+
+{% block top_username %}
+{{ user.get_username }}
+{% endblock top_username %}
+
+{% block logout_link %}
+{% url 'notes:logout' %}
+{% endblock logout_link %}
+
+
+<!--Side bar-->
+
+{% block home_href %}
+    {% url 'notes:home' %}
+{% endblock home_href %}
+
+{% block mail_href %}
+    {% url 'notes:home' %}
+{% endblock mail_href %}
+
+{% block notifications_href %}
+    {% url 'notes:home' %}
+{% endblock notifications_href %}
+
+{% block search_href %}
+    {% url 'notes:home' %}
+{% endblock search_href %}
+
+{% block user_href %}
+    {% url 'notes:detail' user.id %}
+{% endblock user_href %}
+
+{% block settings_href %}
+    {% url 'notes:settings' user.id %}
+{% endblock settings_href %}
+
+
+{% block board_title %}
+Home
+{% endblock board_title %}
+
+{% block content %}
+ <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
+  <div class="my-3 p-3 bg-white rounded shadow-sm">
+    <h6 class="border-bottom border-gray pb-2 mb-0">Follower list</h6>
+      {% for follower in follower_list %}
+        <div class="media text-muted pt-3">
+          <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark">
+                <a href="{% url 'notes:detail' follower.id %}">@{{ follower.username }}</a>
+            </strong>
+          </p>
+        </div>
+      {% endfor %}
+    <small class="d-block text-right mt-3">
+      <a href="#">All updates</a>
+    </small>
+  </div>
+ </main>
+{% endblock content %}
+
+
+{% block js_link %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script src="{% static 'notes/app_base.js' %}"></script>
+{% endblock js_link %}

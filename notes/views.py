@@ -114,3 +114,27 @@ def unfollow(request, pk):
     f = Follow.objects.filter(follow_id=request.user).filter(follower_id=pk)
     f.delete()
     return redirect('notes:detail', pk=pk)
+
+
+class UserFollowListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    template_name = 'notes/follow_list.html'
+    context_object_name = 'follow_list'
+
+    def get_queryset(self):
+        fs = Follow.objects.filter(follow_id=self.kwargs['pk'])
+        follows = [str(f.follower_id.id) for f in fs]
+        return Account.objects.filter(id__in=follows)
+
+
+class UserFollowerListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    template_name = 'notes/follower_list.html'
+    context_object_name = 'follower_list'
+
+    def get_queryset(self):
+        fs = Follow.objects.filter(follower_id=self.kwargs['pk'])
+        followers = [str(f.follow_id.id) for f in fs]
+        return Account.objects.filter(id__in=followers)
