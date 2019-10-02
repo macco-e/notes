@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django_mysql.models import ListCharField
+from django.utils.html import mark_safe
 from imagekit.models import ImageSpecField, ProcessedImageField
 from imagekit.processors import ResizeToFill
+from markdown import markdown
 
 
 class Account(AbstractUser):
@@ -51,3 +53,6 @@ class NotesBetween20190930and20191006(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     images = models.ImageField(upload_to='', blank=True, default='')
+
+    def get_text_as_markdown(self):
+        return mark_safe(markdown(self.text, safe_mode='escape'))
