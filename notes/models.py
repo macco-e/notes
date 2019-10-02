@@ -11,7 +11,7 @@ class Account(AbstractUser):
         max_length=(17 * 53),
         blank=True
     )
-    icon = models.ImageField(upload_to='icons', blank=True, default='')
+    icon = models.ImageField(upload_to='icons', blank=True, default='icons/iconfinder_profle_1055000.png')
 
 
 class Follow(models.Model):
