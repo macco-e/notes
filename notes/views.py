@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.utils import IntegrityError
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 
 from .models import Account, Follow, NotesBetween20190930and20191006
@@ -89,7 +90,8 @@ class PostNoteView(LoginRequiredMixin, CreateView):
     model = NotesBetween20190930and20191006
     template_name = 'notes/post_note.html'
 
-    fields = ['text']
+    fields = ['noted_user_id', 'text']
+    success_url = reverse_lazy('notes:home')
 
 
 class SettingsView(LoginRequiredMixin, UpdateView):
