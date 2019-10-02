@@ -32,6 +32,12 @@
 
 {% block content %}
  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
+     <div style="text-align: right;">
+         {% if user.id == note.noted_user_id.id %}
+            <a href="{% url 'notes:note_update' note.id %}" class="btn btn-success" role="button" aria-pressed="true">Edit</a>
+            <a href="{% url 'notes:note_delete' note.id %}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
+         {% endif %}
+     </div>
   <div class="my-3 p-3 bg-white rounded shadow-sm">
         <div style="margin:0 30px;">
             {{ note.get_text_as_markdown }}
