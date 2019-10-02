@@ -257,6 +257,18 @@ class PostNoteView(LoginRequiredMixin, CreateView):
     fields = ['noted_user_id', 'text']
     success_url = reverse_lazy('notes:home')
 
+# Node detail ------------------------------------------------------------------
+
+class NoteDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/login/'
+
+    model = NotesBetween20190930and20191006
+    template_name = 'notes/note_detail.html'
+    context_object_name = 'note'
+
+
+
+
 
 # period -----------------------------------------------------------------------
 

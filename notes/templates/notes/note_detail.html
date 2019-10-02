@@ -1,0 +1,42 @@
+{% extends 'app_base.html' %}
+{% load static %}
+
+<!--Head-->
+
+{% block css_link %}
+  <link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
+{% endblock css_link %}
+
+{% block title %}
+  Home
+{% endblock title %}
+
+
+{% block search_form %}
+    {% url 'notes:search_home_redirect' %}
+{% endblock search_form %}
+
+{% block search_form_placeholder %}
+    Search notes
+{% endblock search_form_placeholder %}
+
+{% block active_home %}
+    active
+{% endblock active_home %}
+
+<!--Body-->
+
+{% block board_title %}
+    Note
+{% endblock board_title %}
+
+{% block content %}
+ <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
+  <div class="my-3 p-3 bg-white rounded shadow-sm">
+        <div style="margin:0 30px;">
+            {{ note.get_text_as_markdown }}
+        </div>
+  </div>
+ </main>
+{% endblock content %}
+
