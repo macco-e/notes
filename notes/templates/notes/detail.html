@@ -55,10 +55,12 @@
 {% block board_title %}
 @ {{ target_user }}
 
-{% if is_follow %}
-<a href="{% url 'notes:unfollow' self_pk %}" class="btn btn-danger btn" role="button" aria-pressed="true">unfollow</a>
-{% else %}
-<a href="{% url 'notes:follow' self_pk %}" class="btn btn-primary btn" role="button" aria-pressed="true">follow</a>
+{% if user.id != self_pk %}
+    {% if is_follow %}
+    <a href="{% url 'notes:unfollow' self_pk %}" class="btn btn-danger btn" role="button" aria-pressed="true">unfollow</a>
+    {% else %}
+    <a href="{% url 'notes:follow' self_pk %}" class="btn btn-primary btn" role="button" aria-pressed="true">follow</a>
+    {% endif %}
 {% endif %}
 
 <a href="{% url 'notes:follow_list' self_pk %}">
