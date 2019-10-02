@@ -1,6 +1,7 @@
 {% extends 'app_base.html' %}
 {% load static %}
 
+
 <!--Head-->
 
 {% block css_link %}
@@ -12,43 +13,15 @@
 {% endblock title %}
 
 
-<!--Nav bar-->
+{% block search_form %}
+    {% url 'notes:search_home_redirect' %}
+{% endblock search_form %}
 
-{% block top_username %}
-{{ user.get_username }}
-{% endblock top_username %}
+{% block search_form_placeholder %}
+    Search notes
+{% endblock search_form_placeholder %}
 
-{% block logout_link %}
-{% url 'notes:logout' %}
-{% endblock logout_link %}
-
-
-<!--Side bar-->
-
-{% block home_href %}
-    {% url 'notes:home' %}
-{% endblock home_href %}
-
-{% block mail_href %}
-    {% url 'notes:home' %}
-{% endblock mail_href %}
-
-{% block notifications_href %}
-    {% url 'notes:home' %}
-{% endblock notifications_href %}
-
-{% block search_href %}
-    {% url 'notes:home' %}
-{% endblock search_href %}
-
-{% block user_href %}
-    {% url 'notes:detail' user.id %}
-{% endblock user_href %}
-
-{% block settings_href %}
-    {% url 'notes:settings' user.id %}
-{% endblock settings_href %}
-
+<!--Body-->
 
 {% block board_title %}
 Home
@@ -77,11 +50,3 @@ Home
  </main>
 {% endblock content %}
 
-
-{% block js_link %}
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-<script src="{% static 'notes/app_base.js' %}"></script>
-{% endblock js_link %}

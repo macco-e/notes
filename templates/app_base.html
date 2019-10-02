@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="js">
   <head>
@@ -17,11 +18,15 @@
   </head>
   <body>
       <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-          <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><span data-feather="lock"></span>{% block top_username %}{% endblock top_username %}</a>
-          <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+          <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><span data-feather="lock"></span>{{ user.get_username }}</a>
+
+          <form class="search_form w-100" action="{% block search_form %}{% endblock search_form %}" method="POST">
+            {% csrf_token %}
+            <input name="search_word" class="form-control form-control-dark w-100" type="text" placeholder="{% block search_form_placeholder %}{% endblock search_form_placeholder %}" aria-label="Search">
+          </form>
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-              <a class="nav-link" href="{% block logout_link %}{% endblock logout_link %}">Logout</a>
+              <a class="nav-link" href="{% url 'notes:logout' %}">Logout</a>
             </li>
           </ul>
       </nav>
@@ -31,42 +36,49 @@
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
+
               <li class="nav-item">
-                <a class="nav-link active" href="{% block home_href %}{% endblock home_href %}">
+                <a class="nav-link active" href="{% url 'notes:home' %}">
                   <span data-feather="home"></span>
                 </a>
               </li>
                 <p class>Home</p>
+
               <li class="nav-item">
-                <a class="nav-link" href="{% block mail_href %}{% endblock mail_href %}">
-                  <span data-feather="mail"></span>
-                </a>
-              </li>
-                <p>Mail</p>
-              <li class="nav-item">
-                <a class="nav-link" href="{% block notifications_href %}{% endblock notifications_href %}">
+                <a class="nav-link" href="{% url 'notes:home' %}">
                   <span data-feather="bell"></span>
                 </a>
               </li>
                 <p>Notifications</p>
+
               <li class="nav-item">
-                <a class="nav-link" href="{% block search_href %}{% endblock search_href %}">
+                <a class="nav-link" href="{% url 'notes:home' %}">
                   <span data-feather="search"></span>
                 </a>
               </li>
                 <p>Search</p>
+
               <li class="nav-item">
-                <a class="nav-link" href="{% block user_href %}{% endblock user_href %}">
+                <a class="nav-link" href="{% url 'notes:users' %}">
+                  <span data-feather="users"></span>
+                </a>
+              </li>
+                <p>Users</p>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'notes:detail' user.id %}">
                   <span data-feather="user"></span>
                 </a>
               </li>
                 <p>My page</p>
+
               <li class="nav-item">
-                <a class="nav-link" href="{% block settings_href %}{% endblock settings_href %}">
+                <a class="nav-link" href="{% url 'notes:settings' user.id %}">
                   <span data-feather="settings"></span>
                 </a>
               </li>
                 <p>settings</p>
+
             </ul>
           </div>
         </nav>
@@ -107,7 +119,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    {% block js_link %}
-    {% endblock js_link %}
+    <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script src="{% static 'notes/app_base.js' %}"></script>
   </body>
 </html>
