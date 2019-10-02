@@ -45,7 +45,8 @@ Home
             </strong>
           </p>
         </div>
-        <div style="margin:0 30px;">
+
+        <div style="margin:0 30px;" onclick="location.href='{% url 'notes:note_detail' note.id %}'">
             {{ note.get_text_as_markdown }}
         </div>
       {% endfor %}

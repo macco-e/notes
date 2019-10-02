@@ -45,8 +45,10 @@
             <strong class="d-block text-gray-dark">
                 <a href="{% url 'notes:detail' note.noted_user_id.id %}">@{{ note.noted_user_id }}</a>  {{ note.created_at.hour }}:{{ note.created_at.minute }}   {{ note.created_at.month }}/{{ note.created_at.day }}
             </strong>
-            {{ note.text }}
           </p>
+        </div>
+        <div style="margin:0 30px;" onclick="location.href='{% url 'notes:note_detail' note.id %}'">
+            {{ note.get_text_as_markdown }}
         </div>
       {% endfor %}
 
