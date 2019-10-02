@@ -258,8 +258,26 @@ class PostNoteView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('notes:home')
 
 
+# period -----------------------------------------------------------------------
+
+def filter_1hour(request):
+    pass
 
 
+def filter_3hour(request):
+    pass
+
+
+def filter_6hour(request):
+    pass
+
+
+def filter_Today(request):
+    pass
+
+
+def filter_Thisweek(request):
+    pass
 
 
 

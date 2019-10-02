@@ -23,7 +23,7 @@ New note
 {% block content %}
  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
   <div class="my-3 p-3 bg-white rounded shadow-sm">
-    <h6 class="border-bottom border-gray pb-2 mb-0">New note</h6>
+<!--    <h6 class="border-bottom border-gray pb-2 mb-0">New note</h6>-->
 
       <form action="" method="POST">
           {% csrf_token %}
@@ -33,6 +33,10 @@ New note
           <input type="hidden" name="noted_user_id" value="{{ user.id }}">
           <button type="submit" class="btn btn-primary">Submit</button>
       </form>
+
+      <script>
+          var simplemde = new SimpleMDE();
+      </script>
 
   </div>
   </div>
