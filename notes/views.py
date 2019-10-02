@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.utils import IntegrityError
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -257,7 +258,7 @@ class PostNoteView(LoginRequiredMixin, CreateView):
     fields = ['noted_user_id', 'text']
     success_url = reverse_lazy('notes:home')
 
-# Node detail ------------------------------------------------------------------
+# Note detail ------------------------------------------------------------------
 
 class NoteDetailView(LoginRequiredMixin, DetailView):
     login_url = '/login/'
@@ -267,6 +268,21 @@ class NoteDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'note'
 
 
+def delete_note(request, pk):
+    NotesBetween20190930and20191006.objects.get(pk=pk).delete()
+    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect('notes:home')
+
+
+class NoteUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = '/login/'
+
+    model = NotesBetween20190930and20191006
+    template_name = 'notes/note_update.html'
+    context_object_name = 'note'
+
+    fields = ['noted_user_id', 'text']
+    success_url = reverse_lazy('notes:home')
 
 
 
