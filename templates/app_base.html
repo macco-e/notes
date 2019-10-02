@@ -38,42 +38,42 @@
             <ul class="nav flex-column">
 
               <li class="nav-item">
-                <a class="nav-link active" href="{% url 'notes:home' %}">
+                <a class="nav-link {% block active_home %}{% endblock active_home %}" href="{% url 'notes:home' %}">
                   <span data-feather="home"></span>
                 </a>
               </li>
                 <p class>Home</p>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'notes:home' %}">
+                <a class="nav-link {% block active_ %}{% endblock active_ %}" href="{% url 'notes:home' %}">
                   <span data-feather="bell"></span>
                 </a>
               </li>
                 <p>Notifications</p>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'notes:home' %}">
-                  <span data-feather="search"></span>
+                <a class="nav-link {% block active_all_notes %}{% endblock active_all_notes %}" href="{% url 'notes:search' %}">
+                  <span data-feather="book"></span>
                 </a>
               </li>
-                <p>Search</p>
+                <p>All notes</p>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'notes:users' %}">
+                <a class="nav-link {% block active_users %}{% endblock active_users %}" href="{% url 'notes:users' %}">
                   <span data-feather="users"></span>
                 </a>
               </li>
                 <p>Users</p>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'notes:detail' user.id %}">
+                <a class="nav-link {% block active_mypage %}{% endblock active_mypage %}" href="{% url 'notes:detail' user.id %}">
                   <span data-feather="user"></span>
                 </a>
               </li>
                 <p>My page</p>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'notes:settings' user.id %}">
+                <a class="nav-link {% block active_settings %}{% endblock active_settings %}" href="{% url 'notes:settings' user.id %}">
                   <span data-feather="settings"></span>
                 </a>
               </li>

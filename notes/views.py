@@ -101,7 +101,7 @@ class UserDetailView(LoginRequiredMixin, ListView):
         context['num_follower'] = Follow.objects.filter(follower_id=self.kwargs['pk']).count()
         context['is_follow'] = Follow.objects.filter(follow_id=self.request.user.id).filter(follower_id=self.kwargs['pk']).count()
         context['target_user'] = Account.objects.get(pk=self.kwargs['pk'])
-        context['notes_list'] = self.model.objects.filter(noted_user_id=self.kwargs['pk'])
+        context['notes_list'] = self.model.objects.filter(noted_user_id=self.kwargs['pk']).order_by('-created_at')
         context['self_pk'] = self.kwargs['pk']
         return context
 
@@ -140,7 +140,7 @@ class UserNoteSearchView(LoginRequiredMixin, ListView):
         context['num_follower'] = Follow.objects.filter(follower_id=self.request.user.id).count()
         context['is_follow'] = Follow.objects.filter(follow_id=self.request.user.id).filter(follower_id=self.kwargs['self_pk']).count()
         context['target_user'] = Account.objects.get(pk=self.kwargs['self_pk'])
-        context['notes_list'] = self.model.objects.filter(noted_user_id=self.kwargs['self_pk'], text__contains=self.kwargs['search_word'])
+        context['notes_list'] = self.model.objects.filter(noted_user_id=self.kwargs['self_pk'], text__contains=self.kwargs['search_word']).order_by('-created_at')
         context['self_pk'] = self.kwargs['self_pk']
         return context
 
@@ -170,6 +170,38 @@ class UserFollowerListView(LoginRequiredMixin, ListView):
         followers = [str(f.follow_id.id) for f in fs]
         return Account.objects.filter(id__in=followers)
 
+
+# Search -----------------------------------------------------------------------
+
+class SearchListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    model = NotesBetween20190930and20191006
+    template_name = 'notes/search.html'
+    context_object_name = 'notes_list'
+
+    def get_queryset(self):
+        return NotesBetween20190930and20191006.objects.all().order_by('-created_at')
+
+
+def search_notes_redirect(request):
+    if request.POST['search_word']:
+        return redirect('notes:searched', request.POST['search_word'])
+    else:
+        return redirect('notes:search')
+
+
+class SearchedListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+
+    template_name = 'notes/home.html'
+    context_object_name = 'notes_list'
+
+    def get_queryset(self):
+        return NotesBetween20190930and20191006.objects.filter(
+            text__contains=self.kwargs['search_word']).order_by('-created_at')
+
+
 # Users ------------------------------------------------------------------------
 
 class UsersListView(LoginRequiredMixin, ListView):
@@ -178,9 +210,6 @@ class UsersListView(LoginRequiredMixin, ListView):
     model = Account
     template_name = 'notes/users.html'
     context_object_name = 'users_list'
-
-    # def get_context_data(self, **kwargs):
-
 
 
 def search_redirect(request):
