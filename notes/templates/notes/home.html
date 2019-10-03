@@ -41,7 +41,7 @@ Home
             </a>
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">
-                <a href="{% url 'notes:detail' note.noted_user_id.id %}">@{{ note.noted_user_id }}</a>  {{ note.created_at.hour }}:{{ note.created_at.minute }}   {{ note.created_at.month }}/{{ note.created_at.day }}
+                <a href="{% url 'notes:detail' note.noted_user_id.id %}" >@{{ note.noted_user_id }}</a>      Posted at: {{ note.get_format_created_at }}
             </strong>
           </p>
         </div>
