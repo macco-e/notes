@@ -1,24 +1,26 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from .views import sign_up_view, create_user, login_view, HomeView, logout_view, UserDetailView, PostNoteView, SettingsView, follow, unfollow, UserFollowListView, UserFollowerListView, UsersListView
-from .views import UsersSearchView, search_redirect, HomeNotesSearchView, search_home_redirect, UserNoteSearchView, search_user_redirect, SearchListView
-from .views import search_notes_redirect, SearchedListView, NoteDetailView, delete_note, NoteUpdateView
+from .views import sign_up_view, create_user, login_view, HomeView, logout_view, UserDetailView, PostNoteView, SettingsView, follow, unfollow, UserFollowListView, UserFollowerListView
+from .views import UserNoteSearchView, search_user_redirect
+from .views import NoteDetailView, delete_note, NoteUpdateView
+from .views import NotesView, UsersView
 
 app_name = 'notes'
 urlpatterns = [
-    path('', login_view, name='login'),
+    path('login/', login_view, name='login'),
     path('signup/', sign_up_view, name='signup'),
-    path('logout/', logout_view, name='logout'),
     path('create_user/', create_user, name='create_user'),
+    path('logout/', logout_view, name='logout'),
 
     path('home/', HomeView.as_view(), name='home'),
-    path('search_home_redirect/', search_home_redirect, name='search_home_redirect'),
-    path('home/search/<str:search_word>', HomeNotesSearchView.as_view(), name='home_notes_search'),
+    path('home/search/', HomeView.as_view(), name='home_search'),
 
-    path('search/', SearchListView.as_view(), name="search"),
-    path('search_notes_redirect', search_notes_redirect, name="search_notes_redirect"),
-    path('search/<str:search_word>', SearchedListView.as_view(), name="searched"),
+    path('notes/', NotesView.as_view(), name='notes'),
+    path('notes/search/', NotesView.as_view(), name='notes_search'),
+
+    path('users/', UsersView.as_view(), name='users'),
+    path('users/search/', UsersView.as_view(), name='users_search'),
 
     path('user/<int:pk>', UserDetailView.as_view(), name='detail'),
     path('user/<int:pk>/follow', UserFollowListView.as_view(), name='follow_list'),
@@ -28,10 +30,6 @@ urlpatterns = [
 
     path('follow/<int:pk>', follow, name='follow'),
     path('unfollow/<int:pk>', unfollow, name='unfollow'),
-
-    path('users/', UsersListView.as_view(), name='users'),
-    path('search_redirect/', search_redirect, name='search_redirect'),
-    path('users/search/<str:search_word>', UsersSearchView.as_view(), name='users_search'),
 
     path('settings/<int:pk>', SettingsView.as_view(), name='settings'),
 
