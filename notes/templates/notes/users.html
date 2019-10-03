@@ -5,53 +5,53 @@
 <!--Head-->
 
 {% block css_link %}
-  <link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
+<link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
 {% endblock css_link %}
 
 {% block title %}
-  Users
+Users
 {% endblock title %}
 
 
 {% block search_form %}
-    {% url 'notes:search_redirect' %}
+{% url 'notes:users' %}
 {% endblock search_form %}
 
 {% block search_form_placeholder %}
-    Search user name
+Search user name
 {% endblock search_form_placeholder %}
 
 {% block active_users %}
-    active
+active
 {% endblock active_users %}
 
 
 <!--Body-->
 
 {% block board_title %}
-    Users
+Users
 {% endblock board_title %}
 
 {% block content %}
- <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
-  <div class="my-3 p-3 bg-white rounded shadow-sm">
-    <h6 class="border-bottom border-gray pb-2 mb-0">Follow list</h6>
-      {% for each_user in users_list %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
+    <div class="my-3 p-3 bg-white rounded shadow-sm">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Follow list</h6>
+        {% for each_user in users_list %}
         <div class="media text-muted pt-3">
-            <a href="{% url 'notes:detail' each_user.id %}">
-          <img src="{{ each_user.icon_middle.url }}" alt="N">
+            <a href="{% url 'notes:user_page' each_user.pk %}">
+                <img src="{{ each_user.icon_middle.url }}" alt="N">
             </a>
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark">
-                <a href="{% url 'notes:detail' each_user.id %}">@{{ each_user.username }}</a>
-            </strong>
-          </p>
+            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">
+                    <a href="{% url 'notes:user_page' each_user.pk %}">@{{ each_user.username }}</a>
+                </strong>
+            </p>
         </div>
-      {% endfor %}
-    <small class="d-block text-right mt-3">
-      <a href="#">All updates</a>
-    </small>
-  </div>
- </main>
+        {% endfor %}
+        <small class="d-block text-right mt-3">
+            <a href="#">All updates</a>
+        </small>
+    </div>
+</main>
 {% endblock content %}
 

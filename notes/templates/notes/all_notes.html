@@ -14,7 +14,7 @@
 
 
 {% block search_form %}
-    {% url 'notes:search_home_redirect' %}
+    {% url 'notes:notes' %}
 {% endblock search_form %}
 
 {% block search_form_placeholder %}
@@ -38,12 +38,12 @@
 
       {% for note in notes_list %}
         <div class="media text-muted pt-3">
-            <a href="{% url 'notes:detail' note.noted_user_id.id %}">
-            <img src="{{ note.noted_user_id.icon_small.url }}" alt="N" >
+            <a href="{% url 'notes:user_page' note.author.pk %}">
+            <img src="{{ note.author.icon_small.url }}" alt="N" >
             </a>
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">
-                <a href="{% url 'notes:detail' note.noted_user_id.id %}">@{{ note.noted_user_id }}</a>  {{ note.created_at.hour }}:{{ note.created_at.minute }}   {{ note.created_at.month }}/{{ note.created_at.day }}
+                <a href="{% url 'notes:user_page' note.author.pk %}">@{{ note.author }}</a>  {{ note.created_at.hour }}:{{ note.created_at.minute }}   {{ note.created_at.month }}/{{ note.created_at.day }}
             </strong>
           </p>
         </div>

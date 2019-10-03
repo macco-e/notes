@@ -1,7 +1,6 @@
 {% extends 'app_base.html' %}
 {% load static %}
 
-
 <!--Head-->
 
 {% block css_link %}
@@ -13,6 +12,17 @@
 {% endblock title %}
 
 
+<!--Nav bar-->
+
+{% block top_username %}
+{{ user.get_username }}
+{% endblock top_username %}
+
+{% block logout_link %}
+{% url 'notes:logout' %}
+{% endblock logout_link %}
+
+
 <!--Body-->
 
 {% block board_title %}
@@ -22,15 +32,15 @@ Home
 {% block content %}
  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
   <div class="my-3 p-3 bg-white rounded shadow-sm">
-    <h6 class="border-bottom border-gray pb-2 mb-0">Follower list</h6>
-      {% for follower in follower_list %}
+    <h6 class="border-bottom border-gray pb-2 mb-0">{{ relation }} list</h6>
+      {% for account in accounts_list %}
         <div class="media text-muted pt-3">
-          <a href="{% url 'notes:user_page' follower.id %}">
-                <img src="{{ follower.icon_middle.url }}" alt="N">
-          </a>
+           <a href="{% url 'notes:user_page' account.pk %}">
+                <img src="{{ account.icon_middle.url }}" alt="N">
+            </a>
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">
-                <a href="{% url 'notes:user_page' follower.id %}">@{{ follower.username }}</a>
+                <a href="{% url 'notes:user_page' account.id %}">@{{ account.username }}</a>
             </strong>
           </p>
         </div>
@@ -41,4 +51,3 @@ Home
   </div>
  </main>
 {% endblock content %}
-

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Account, Follow, NotesBetween20190930and20191006
+from .models import Account, Follow, Notes
 
 
 class AccountCreationAdmin(forms.ModelForm):
@@ -21,16 +21,14 @@ class AccountAdmin(UserAdmin):
     add_form = AccountCreationAdmin
 
     fieldsets = [
-        ('Auth', {'fields': ['username', 'password']}),
-        ('Note', {'fields': ['icon', 'noted_num', 'noted_tables']}),
+        ('Auth', {'fields': ['username', 'password', 'icon']}),
     ]
     add_fieldsets = [
-        ('Auth', {'fields': ['username', 'password']}),
-        ('Note', {'fields': ['icon', 'noted_num', 'noted_tables']}),
+        ('Auth', {'fields': ['username', 'password', 'icon']}),
     ]
 
-    list_display = ('id', 'username', 'noted_num')
-    list_filter = ('id', 'username', 'noted_num')
+    list_display = ('id', 'username')
+    list_filter = ('id', 'username')
 
 
 class FollowAdmin(admin.ModelAdmin):
@@ -39,9 +37,9 @@ class FollowAdmin(admin.ModelAdmin):
 
 
 class NotesBetweenAdmin(admin.ModelAdmin):
-    list_display = ('noted_user_id', 'text')
+    list_display = ('author', 'text')
 
 
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Follow, FollowAdmin)
-admin.site.register(NotesBetween20190930and20191006, NotesBetweenAdmin)
+admin.site.register(Notes, NotesBetweenAdmin)

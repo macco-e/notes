@@ -17,13 +17,11 @@ this is signup
     {% if error %}
     <p>{{ error }}</p>
     {% endif %}
-  <label for="inputUsername" class="sr-only">Username</label>
-  <input type="username" id="inputEmail" name="username" class="form-control" placeholder="User name" required autofocus>
-
-  <label for="inputPassword" class="sr-only">Password</label>
-  <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-
-  <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-  <p class="mt-5 mb-3 text-muted"><a href="{% url 'notes:signup' %}">→Sign up</a></p>
+    <label for="inputUsername" class="sr-only">Username</label>
+    <input type="username" id="inputEmail" name="username" class="form-control" placeholder="User name" required autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    <p class="mt-5 mb-3 text-muted"><a href="{% url 'notes:signup' %}">→Sign up</a></p>
 </form>
 {% endblock content %}

@@ -35,12 +35,12 @@ Home
     <h6 class="border-bottom border-gray pb-2 mb-0">Follow list</h6>
       {% for follow in follow_list %}
         <div class="media text-muted pt-3">
-           <a href="{% url 'notes:detail' follow.id %}">
+           <a href="{% url 'notes:user_page' follow.id %}">
                 <img src="{{ follow.icon_middle.url }}" alt="N">
             </a>
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">
-                <a href="{% url 'notes:detail' follow.id %}">@{{ follow.username }}</a>
+                <a href="{% url 'notes:user_page' follow.id %}">@{{ follow.username }}</a>
             </strong>
           </p>
         </div>

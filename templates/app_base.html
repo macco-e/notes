@@ -29,9 +29,8 @@
       <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
           <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><span data-feather="lock"></span>{{ user.get_username }}</a>
 
-          <form class="search_form w-100" action="{% block search_form %}{% endblock search_form %}" method="POST">
-            {% csrf_token %}
-            <input name="search_word" class="form-control form-control-dark w-100" type="text" placeholder="{% block search_form_placeholder %}{% endblock search_form_placeholder %}" aria-label="Search">
+          <form class="search_form w-100" action="{% block search_form %}{% endblock search_form %}" method="GET">
+            <input name="q" class="form-control form-control-dark w-100" type="text" placeholder="{% block search_form_placeholder %}{% endblock search_form_placeholder %}" aria-label="Search">
           </form>
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -61,7 +60,7 @@
                 <p>Notifications</p>
 
               <li class="nav-item">
-                <a class="nav-link {% block active_all_notes %}{% endblock active_all_notes %}" href="{% url 'notes:search' %}">
+                <a class="nav-link {% block active_all_notes %}{% endblock active_all_notes %}" href="{% url 'notes:notes' %}">
                   <span data-feather="book"></span>
                 </a>
               </li>
@@ -75,7 +74,7 @@
                 <p>Users</p>
 
               <li class="nav-item">
-                <a class="nav-link {% block active_mypage %}{% endblock active_mypage %}" href="{% url 'notes:detail' user.id %}">
+                <a class="nav-link {% block active_mypage %}{% endblock active_mypage %}" href="{% url 'notes:user_page' user.id %}">
                   <span data-feather="user"></span>
                 </a>
               </li>
