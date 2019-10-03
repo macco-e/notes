@@ -37,7 +37,7 @@ class FollowAdmin(admin.ModelAdmin):
 
 
 class NotesBetweenAdmin(admin.ModelAdmin):
-    list_display = ('noted_user_id', 'text')
+    list_display = ('author', 'text')
 
 
 admin.site.register(Account, AccountAdmin)

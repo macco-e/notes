@@ -14,7 +14,7 @@ Home
 
 
 {% block search_form %}
-{% url 'notes:home_search' %}
+{% url 'notes:home' %}
 {% endblock search_form %}
 
 {% block search_form_placeholder %}
@@ -38,12 +38,12 @@ Home
         <h6 class="border-bottom border-gray pb-2 mb-0">Time line</h6>
         {% for note in notes_list %}
         <div class="media text-muted pt-3">
-            <a href="{% url 'notes:detail' note.noted_user_id.id %}">
-                <img src="{{ note.noted_user_id.icon_small.url }}" alt="N">
+            <a href="{% url 'notes:user_page' note.author.id %}">
+                <img src="{{ note.author.icon_small.url }}" alt="N">
             </a>
             <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                 <strong class="d-block text-gray-dark">
-                    <a href="{% url 'notes:detail' note.noted_user_id.id %}">@{{ note.noted_user_id }}</a> Posted at: {{ note.get_format_created_at }}
+                    <a href="{% url 'notes:user_page' note.author.id %}">@{{ note.author }}</a> Posted at: {{ note.get_format_created_at }}
                 </strong>
             </p>
         </div>

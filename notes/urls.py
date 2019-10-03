@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from .views import sign_up_view, create_user, login_view, HomeView, logout_view, UserDetailView, PostNoteView, SettingsView, follow, unfollow, UserFollowListView, UserFollowerListView
-from .views import UserNoteSearchView, search_user_redirect
+from .views import sign_up_view, create_user, login_view, HomeView, logout_view, PostNoteView, SettingsView, follow, unfollow
 from .views import NoteDetailView, delete_note, NoteUpdateView
-from .views import NotesView, UsersView
+from .views import NotesView, UsersView, UserView, UserRelationshipView
 
 app_name = 'notes'
 urlpatterns = [
@@ -14,19 +13,13 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
 
     path('home/', HomeView.as_view(), name='home'),
-    path('home/search/', HomeView.as_view(), name='home_search'),
-
     path('notes/', NotesView.as_view(), name='notes'),
-    path('notes/search/', NotesView.as_view(), name='notes_search'),
-
     path('users/', UsersView.as_view(), name='users'),
-    path('users/search/', UsersView.as_view(), name='users_search'),
-
-    path('user/<int:pk>', UserDetailView.as_view(), name='detail'),
-    path('user/<int:pk>/follow', UserFollowListView.as_view(), name='follow_list'),
-    path('user/<int:pk>/follower', UserFollowerListView.as_view(), name='follower_list'),
-    path('search_user_redirect/<int:self_pk>', search_user_redirect, name='search_user_redirect'),
-    path('user/<int:self_pk>/search/<str:search_word>', UserNoteSearchView.as_view(), name='user_notes_search'),
+    path('user/<int:pk>', UserView.as_view(), name='user_page'),
+    path('user/<int:pk>/follow', UserRelationshipView.as_view(),
+         name='user_follow_list'),
+    path('user/<int:pk>/follower', UserRelationshipView.as_view(),
+         name='user_follower_list'),
 
     path('follow/<int:pk>', follow, name='follow'),
     path('unfollow/<int:pk>', unfollow, name='unfollow'),

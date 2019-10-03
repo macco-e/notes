@@ -74,7 +74,7 @@
                 <p>Users</p>
 
               <li class="nav-item">
-                <a class="nav-link {% block active_mypage %}{% endblock active_mypage %}" href="{% url 'notes:detail' user.id %}">
+                <a class="nav-link {% block active_mypage %}{% endblock active_mypage %}" href="{% url 'notes:user_page' user.id %}">
                   <span data-feather="user"></span>
                 </a>
               </li>

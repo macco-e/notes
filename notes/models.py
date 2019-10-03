@@ -29,14 +29,14 @@ class Account(AbstractUser):
 
 
 class Follow(models.Model):
-    follow_id = models.ForeignKey(Account, on_delete=models.CASCADE,
+    follow = models.ForeignKey(Account, on_delete=models.CASCADE,
                                   related_name='follow_id')
-    follower_id = models.ForeignKey(Account, on_delete=models.CASCADE,
+    follower = models.ForeignKey(Account, on_delete=models.CASCADE,
                                     related_name='follower_id')
 
 
 class Notes(models.Model):
-    noted_user_id = models.ForeignKey(Account, on_delete=models.CASCADE)
+    author = models.ForeignKey(Account, on_delete=models.CASCADE)
     text = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     images = models.ImageField(upload_to='', blank=True, default='')

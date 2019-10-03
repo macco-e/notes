@@ -14,7 +14,7 @@
 
 
 {% block search_form %}
-    {% url 'notes:search_user_redirect' self_pk %}
+    {% url 'notes:user_page' target_user.pk %}
 {% endblock search_form %}
 
 {% block search_form_placeholder %}
@@ -36,19 +36,19 @@
 
 {% if user.id != self_pk %}
     {% if is_follow %}
-        <a href="{% url 'notes:unfollow' self_pk %}" class="btn btn-danger btn" role="button" aria-pressed="true">unfollow</a>
+        <a href="{% url 'notes:unfollow' target_user.pk %}" class="btn btn-danger btn" role="button" aria-pressed="true">unfollow</a>
     {% else %}
-        <a href="{% url 'notes:follow' self_pk %}" class="btn btn-primary btn" role="button" aria-pressed="true">follow</a>
+        <a href="{% url 'notes:follow' target_user.pk %}" class="btn btn-primary btn" role="button" aria-pressed="true">follow</a>
     {% endif %}
 {% endif %}
 
-<a href="{% url 'notes:follow_list' self_pk %}">
+<a href="{% url 'notes:user_follow_list' target_user.pk %}">
 <button type="button" class="btn btn-success">
     Follow <span class="badge badge-light">{{ num_follow }}</span>
 </button>
 </a>
 
-<a href="{% url 'notes:follower_list' self_pk %}">
+<a href="{% url 'notes:user_follower_list' target_user.pk %}">
 <button type="button" class="btn btn-success">
   Follower <span class="badge badge-light">{{ num_follower }}</span>
 </button>
@@ -61,14 +61,14 @@
  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
   <div class="my-3 p-3 bg-white rounded shadow-sm">
     <h6 class="border-bottom border-gray pb-2 mb-0">Recent notes</h6>
-      {% for note in notes_list %}
+      {% for note in target_user_notes_list %}
         <div class="media text-muted pt-3">
-            <a href="{% url 'notes:detail' note.noted_user_id.id %}">
-                <img src="{{ note.noted_user_id.icon_small.url }}" alt="N">
+            <a href="{% url 'notes:user_page' target_user.pk %}">
+                <img src="{{ note.author.icon_small.url }}" alt="N">
             </a>
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">
-                <a href="{% url 'notes:detail' note.noted_user_id.id %}">@{{ note.noted_user_id }}</a>  {{ note.created_at.hour }}:{{ note.created_at.minute }}   {{ note.created_at.month }}/{{ note.created_at.day }}
+                <a href="{% url 'notes:user_page' target_user.pk %}">@{{ note.author }}</a>  {{ note.created_at.hour }}:{{ note.created_at.minute }}   {{ note.created_at.month }}/{{ note.created_at.day }}
             </strong>
           </p>
         </div>
