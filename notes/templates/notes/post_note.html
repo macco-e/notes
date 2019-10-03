@@ -23,14 +23,12 @@ New note
 {% block content %}
  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
   <div class="my-3 p-3 bg-white rounded shadow-sm">
-<!--    <h6 class="border-bottom border-gray pb-2 mb-0">New note</h6>-->
-
       <form action="" method="POST">
           {% csrf_token %}
           <div class="form-group">
             <textarea name="text" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
           </div>
-          <input type="hidden" name="noted_user_id" value="{{ user.id }}">
+          <input type="hidden" name="author" value="{{ user.id }}">
           <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 
