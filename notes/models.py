@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.db import models
 from django_mysql.models import ListCharField
 from django.utils.html import mark_safe
 from imagekit.models import ImageSpecField, ProcessedImageField
@@ -56,3 +56,9 @@ class NotesBetween20190930and20191006(models.Model):
 
     def get_text_as_markdown(self):
         return mark_safe(markdown(self.text, safe_mode='escape'))
+
+    def get_format_created_at(self):
+        return self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+
+

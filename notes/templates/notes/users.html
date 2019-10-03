@@ -6,23 +6,6 @@
 
 {% block css_link %}
   <link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
-
-<!--<script type="text/javascript">-->
-<!--  $('#icon-img').change(function(e){-->
-<!--    var file = e.target.files[0];-->
-<!--    var reader = new FileReader();-->
-
-<!--    alert('changed');-->
-
-<!--    reader.onload = (function(file){-->
-<!--      return function(e){-->
-<!--        $("#iconn-preview").attr("src", e.target.result);-->
-<!--      };-->
-<!--    })(file);-->
-<!--    reader.readAsDataURL(file);-->
-
-<!--  });-->
-</script>
 {% endblock css_link %}
 
 {% block title %}
@@ -31,7 +14,7 @@
 
 
 {% block search_form %}
-    {% url 'notes:search_notes_redirect' %}
+    {% url 'notes:search_redirect' %}
 {% endblock search_form %}
 
 {% block search_form_placeholder %}
