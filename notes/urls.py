@@ -2,11 +2,12 @@ from django.contrib import admin
 from django.urls import include, path
 
 from .views import sign_up_view, create_user, login_view, HomeView, logout_view, PostNoteView, SettingsView, follow, unfollow
-from .views import NoteDetailView, delete_note, NoteUpdateView
+from .views import NoteDetailView, delete_note, NoteUpdateView, redirect_to_home
 from .views import NotesView, UsersView, UserView, UserRelationshipView
 
 app_name = 'notes'
 urlpatterns = [
+    path('', redirect_to_home, name='redirect_to_home'),
     path('login/', login_view, name='login'),
     path('signup/', sign_up_view, name='signup'),
     path('create_user/', create_user, name='create_user'),
@@ -26,7 +27,7 @@ urlpatterns = [
 
     path('settings/<int:pk>', SettingsView.as_view(), name='settings'),
 
-    path('create/', PostNoteView.as_view(), name='post_note'),
+    path('post/', PostNoteView.as_view(), name='post_note'),
 
     path('note/<int:pk>', NoteDetailView.as_view(), name='note_detail'),
     path('note/edit/<int:pk>', NoteUpdateView.as_view(), name='note_update'),

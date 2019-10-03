@@ -9,7 +9,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from .models import Account, Follow, Notes
 
 
-# auth -------------------------------------------------------------------------
+# Auth -------------------------------------------------------------------------
+def redirect_to_home(request):
+    return redirect('notes:home')
+
 
 def sign_up_view(request):
     return render(request, 'notes/signup.html')
@@ -73,6 +76,66 @@ class HomeView(LoginRequiredMixin, ListView):
                 author__in=follow_list).order_by('-created_at')
 
 
+# All notes---------------------------------------------------------------------
+
+class NotesView(LoginRequiredMixin, ListView):
+    template_name = 'notes/all_notes.html'
+    context_object_name = 'notes_list'
+
+    def get_queryset(self):
+        if self.request.GET.get('q'):
+            search_word = self.request.GET['q']
+            return Notes.objects.filter(
+                text__contains=search_word).order_by('-created_at')
+        else:
+            return Notes.objects.all().order_by('-created_at')
+
+
+# Note  ------------------------------------------------------------------
+
+class PostNoteView(LoginRequiredMixin, CreateView):
+    model = Notes
+    template_name = 'notes/post_note.html'
+
+    fields = ['author', 'text']
+    success_url = reverse_lazy('notes:home')
+
+
+class NoteUpdateView(LoginRequiredMixin, UpdateView):
+    model = Notes
+    template_name = 'notes/note_update.html'
+    context_object_name = 'note'
+
+    fields = ['author', 'text']
+    success_url = reverse_lazy('notes:home')
+
+
+class NoteDetailView(LoginRequiredMixin, DetailView):
+    model = Notes
+    template_name = 'notes/note_detail.html'
+    context_object_name = 'note'
+
+
+@login_required
+def delete_note(request, pk):
+    Notes.objects.get(pk=pk).delete()
+    return redirect('notes:home')
+
+
+# Users ------------------------------------------------------------------------
+
+class UsersView(LoginRequiredMixin, ListView):
+    template_name = 'notes/users.html'
+    context_object_name = 'users_list'
+
+    def get_queryset(self):
+        if self.request.GET.get('q'):
+            return Account.objects.filter(
+                username__contains=self.request.GET['q'])
+        else:
+            return Account.objects.all()
+
+
 # User -------------------------------------------------------------------------
 
 class UserView(LoginRequiredMixin, ListView):
@@ -102,22 +165,7 @@ class UserView(LoginRequiredMixin, ListView):
         return context
 
 
-@login_required
-def follow(request, pk):
-    f = Follow.objects.create(follow=request.user,
-                              follower=Account.objects.get(pk=pk))
-    f.save()
-    return redirect('notes:user_page', pk=pk)
-
-
-@login_required
-def unfollow(request, pk):
-    f = Follow.objects.filter(follow=request.user).filter(follower=pk)
-    f.delete()
-    return redirect('notes:user_page', pk=pk)
-
-
-# follow list ------------------------------------------------------------------
+# Relation ---------------------------------------------------------------------
 
 class UserRelationshipView(LoginRequiredMixin, ListView):
     template_name = 'notes/user_relationship.html'
@@ -158,34 +206,20 @@ class UserRelationshipView(LoginRequiredMixin, ListView):
         context['relation'] = self.request.path.split('/')[-1]
         return context
 
-# All notes---------------------------------------------------------------------
+
+@login_required
+def follow(request, pk):
+    f = Follow.objects.create(follow=request.user,
+                              follower=Account.objects.get(pk=pk))
+    f.save()
+    return redirect('notes:user_page', pk=pk)
 
 
-class NotesView(LoginRequiredMixin, ListView):
-    template_name = 'notes/all_notes.html'
-    context_object_name = 'notes_list'
-
-    def get_queryset(self):
-        if self.request.GET.get('q'):
-            search_word = self.request.GET['q']
-            return Notes.objects.filter(
-                text__contains=search_word).order_by('-created_at')
-        else:
-            return Notes.objects.all().order_by('-created_at')
-
-
-# Users ------------------------------------------------------------------------
-
-class UsersView(LoginRequiredMixin, ListView):
-    template_name = 'notes/users.html'
-    context_object_name = 'users_list'
-
-    def get_queryset(self):
-        if self.request.GET.get('q'):
-            return Account.objects.filter(
-                username__contains=self.request.GET['q'])
-        else:
-            return Account.objects.all()
+@login_required
+def unfollow(request, pk):
+    f = Follow.objects.filter(follow=request.user).filter(follower=pk)
+    f.delete()
+    return redirect('notes:user_page', pk=pk)
 
 
 # Settings----------------------------------------------------------------------
@@ -195,37 +229,3 @@ class SettingsView(LoginRequiredMixin, UpdateView):
     template_name = 'notes/settings.html'
     fields = ['username', 'icon']
     success_url = reverse_lazy('notes:home')
-
-
-# Create -----------------------------------------------------------------------
-
-class PostNoteView(LoginRequiredMixin, CreateView):
-    model = Notes
-    template_name = 'notes/post_note.html'
-
-    fields = ['author', 'text']
-    success_url = reverse_lazy('notes:home')
-
-
-# Note detail ------------------------------------------------------------------
-
-class NoteDetailView(LoginRequiredMixin, DetailView):
-    model = Notes
-    template_name = 'notes/note_detail.html'
-    context_object_name = 'note'
-
-@login_required
-def delete_note(request, pk):
-    Notes.objects.get(pk=pk).delete()
-    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return redirect('notes:home')
-
-
-class NoteUpdateView(LoginRequiredMixin, UpdateView):
-    model = Notes
-    template_name = 'notes/note_update.html'
-    context_object_name = 'note'
-
-    fields = ['author', 'text']
-    success_url = reverse_lazy('notes:home')
-
