@@ -152,8 +152,9 @@ class UserView(LoginRequiredMixin, ListView):
             follow=target_user).count()
         context['num_follower'] = Follow.objects.filter(
             follower=target_user).count()
-        context['is_follow'] = Follow.objects.filter(follow=login_user,
-                                                     follower=target_user)
+
+        context['is_follow'] = bool(Follow.objects.filter(follow=login_user,
+                                                     follower=target_user).count())
         if self.request.GET.get('q'):
             search_word = self.request.GET['q']
             context['target_user_notes_list'] = Notes.objects.filter(
