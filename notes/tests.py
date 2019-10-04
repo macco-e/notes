@@ -329,3 +329,42 @@ class TestUserView(TestCase):
             response.context['target_user_notes_list'],
             ['<Notes: testclient1:adddd>',
              '<Notes: testclient1:aaaaa>'], ordered=True)
+
+
+class TestSettingsView(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        from .models import Account
+        cls.u1 = Account.objects.create_user(username='testclient1', password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2', password='password')
+
+    def test_settings_view_status_code_200(self):
+        """GET URL while logged in"""
+        self.client.force_login(self.u1)
+        url = reverse('notes:settings', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_settings_view_status_code_302(self):
+        """GET URL without logged in"""
+        url = reverse('notes:settings', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/login/?next=/settings/{self.u1.pk}')
+
+    def test_settings_view_account(self):
+        """Whether it is my setting page"""
+
+        # Whether u1 object is passed when logging in as u1
+        self.client.force_login(self.u1)
+        url = reverse('notes:settings', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.context['object'], self.u1)
+        self.client.logout()
+
+        # Whether u2 object is passed when logging in as u2
+        self.client.force_login(self.u2)
+        url = reverse('notes:settings', args=(self.u2.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.context['object'], self.u2)
+        self.client.logout()
