@@ -213,3 +213,119 @@ class TestUsersView(TestCase):
             response.context['users_list'],
             ['<Account: testclient1>'], ordered=False)
 
+
+class TestUserView(TestCase):
+
+    def _follow(self, follow_user, follower_user):
+        from .models import Follow
+        f = Follow(follow=follow_user, follower=follower_user)
+        f.save()
+
+    def _create_note(self, author, text):
+        from .models import Notes
+        note = Notes(author=author, text=text)
+        note.save()
+
+    @classmethod
+    def setUpTestData(cls):
+        from .models import Account
+        cls.u1 = Account.objects.create_user(username='testclient1', password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2', password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3', password='password')
+
+    def test_user_view_status_code_200(self):
+        """GET URL while logged in"""
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_page', args=(self.u1.pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_view_status_code_302(self):
+        """GET URL without logged in"""
+        url = reverse('notes:user_page', args=(self.u1.pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/login/?next=/user/{self.u1.pk}')
+
+    def test_user_view_get_target_user(self):
+        """Get target user of target page"""
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_page', args=(self.u2.pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(
+            response.context['target_user'], self.u2)
+
+    def test_user_view_get_num_follow(self):
+        """Get the number of follows of the target user"""
+        self._follow(self.u1, self.u2)
+        self._follow(self.u1, self.u3)
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_page', args=(self.u1.pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.context['num_follow'], 2)
+
+    def test_user_view_get_num_follower(self):
+        """Get the number of followers of the target user"""
+        self._follow(self.u2, self.u1)
+        self._follow(self.u3, self.u1)
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_page', args=(self.u1.pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.context['num_follower'], 2)
+
+    def test_user_view_get_is_follow(self):
+        """Get Whether the logged-in user is following the target user"""
+        self._follow(self.u1, self.u2)
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_page', args=(self.u2.pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.context['is_follow'], True)
+
+    def test_user_view_get_notes(self):
+        """Get user notes"""
+        self._create_note(self.u1, 'aaaaa')
+        self._create_note(self.u1, 'bbbbb')
+        self._create_note(self.u1, 'ccccc')
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_page', args=(self.u1.pk,))
+        response = self.client.get(url)
+
+        self.assertQuerysetEqual(
+            response.context['target_user_notes_list'],
+            ['<Notes: testclient1:ccccc>',
+             '<Notes: testclient1:bbbbb>',
+             '<Notes: testclient1:aaaaa>'],
+            ordered=True)
+
+    def test_user_view_get_notes_by_searchword(self):
+        """Get user notes by search word"""
+        self._create_note(self.u1, 'aaaaa')
+        self._create_note(self.u1, 'bbbbb')
+        self._create_note(self.u1, 'ccccc')
+        self._create_note(self.u1, 'adddd')
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_page', args=(self.u1.pk,))
+        response = self.client.get(url, {'q': 'a'})
+
+        self.assertQuerysetEqual(
+            response.context['target_user_notes_list'],
+            ['<Notes: testclient1:adddd>',
+             '<Notes: testclient1:aaaaa>'], ordered=True)
