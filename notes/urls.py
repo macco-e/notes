@@ -8,6 +8,7 @@ from .views import NotesView, UsersView, UserView, UserRelationshipView
 app_name = 'notes'
 urlpatterns = [
     path('', redirect_to_home, name='redirect_to_home'),
+
     path('login/', login_view, name='login'),
     path('signup/', sign_up_view, name='signup'),
     path('create_user/', create_user, name='create_user'),

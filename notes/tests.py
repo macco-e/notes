@@ -1,7 +1,99 @@
 from django.test import TestCase
-from django.urls import resolve, reverse
+from django.urls import reverse
+
 
 # Create your tests here.
+
+class TestRedirectToHome(TestCase):
+    def test_redirect_to_home_logined(self):
+        """GET '/' while logged in"""
+        # Create Account
+        from .models import Account
+        self.u1 = Account.objects.create_user(username='testclient1',
+                                              password='password')
+        # Log in
+        self.client.force_login(self.u1)
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/home/')
+
+    def test_redirect_to_home_not_logined(self):
+        """GET '/' without logged in"""
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/login/?next=/')
+
+
+class TestSignupView(TestCase):
+    def test_sign_up_view(self):
+        """GET sigup view"""
+        response = self.client.get(reverse('notes:signup'))
+        self.assertEqual(response.status_code, 200)
+
+
+class TestCreateUser(TestCase):
+    def test_create_user(self):
+        """Create user with POST"""
+        from .models import Account
+
+        post_data = {'username': 'testclient1', 'password': 'password'}
+
+        response = self.client.post(reverse('notes:create_user'), post_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('notes:login'))
+        self.assertQuerysetEqual(Account.objects.all(),
+                                 ['<Account: testclient1>'])
+
+    def test_create_user_get(self):
+        """GET"""
+        response = self.client.get(reverse('notes:create_user'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('notes:signup'))
+
+
+class TestLoginView(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        from .models import Account
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.url = reverse('notes:login')
+
+    def test_login_view_without_logged_in(self):
+        """Come to this view without logging in"""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_view_while_logged_in(self):
+        """Come to this view while logging in"""
+        self.client.force_login(self.u1)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('notes:home'))
+
+    def test_login_view_post_correct_user(self):
+        """POST registered user information"""
+        post_data = {
+            'username': 'testclient1',
+            'password': 'password'
+        }
+
+        response = self.client.post(self.url, post_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('notes:home'))
+
+    def test_login_view_post_wrong_user(self):
+        """POST not registered user information"""
+        post_data = {
+            'username': 'testclient100',
+            'password': 'pass',
+        }
+        response = self.client.post(self.url, post_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'ユーザ名かパスワードが間違っています')
+
 
 class TestHomeView(TestCase):
 
@@ -18,9 +110,12 @@ class TestHomeView(TestCase):
     @classmethod
     def setUpTestData(cls):
         from .models import Account
-        cls.u1 = Account.objects.create_user(username='testclient1', password='password')
-        cls.u2 = Account.objects.create_user(username='testclient2', password='password')
-        cls.u3 = Account.objects.create_user(username='testclient3', password='password')
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3',
+                                             password='password')
 
         cls.url = reverse('notes:home')
 
@@ -106,9 +201,12 @@ class TestNotesView(TestCase):
     @classmethod
     def setUpTestData(cls):
         from .models import Account
-        cls.u1 = Account.objects.create_user(username='testclient1', password='password')
-        cls.u2 = Account.objects.create_user(username='testclient2', password='password')
-        cls.u3 = Account.objects.create_user(username='testclient3', password='password')
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3',
+                                             password='password')
         cls.url = reverse('notes:notes')
 
     def test_notes_view_status_code_200(self):
@@ -141,7 +239,7 @@ class TestNotesView(TestCase):
             response.context['notes_list'],
             ['<Notes: testclient3:test3>',
              '<Notes: testclient2:test2>',
-             '<Notes: testclient1:test1>',])
+             '<Notes: testclient1:test1>', ])
 
     def test_notes_view_search_notes(self):
         """Check the search function for all notes"""
@@ -178,9 +276,12 @@ class TestUsersView(TestCase):
     @classmethod
     def setUpTestData(cls):
         from .models import Account
-        cls.u1 = Account.objects.create_user(username='testclient1', password='password')
-        cls.u2 = Account.objects.create_user(username='testclient2', password='password')
-        cls.u3 = Account.objects.create_user(username='testclient3', password='password')
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3',
+                                             password='password')
         cls.url = reverse('notes:users')
 
     def test_users_view_status_code_200(self):
@@ -229,9 +330,12 @@ class TestUserView(TestCase):
     @classmethod
     def setUpTestData(cls):
         from .models import Account
-        cls.u1 = Account.objects.create_user(username='testclient1', password='password')
-        cls.u2 = Account.objects.create_user(username='testclient2', password='password')
-        cls.u3 = Account.objects.create_user(username='testclient3', password='password')
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3',
+                                             password='password')
 
     def test_user_view_status_code_200(self):
         """GET URL while logged in"""
@@ -335,8 +439,10 @@ class TestSettingsView(TestCase):
     @classmethod
     def setUpTestData(cls):
         from .models import Account
-        cls.u1 = Account.objects.create_user(username='testclient1', password='password')
-        cls.u2 = Account.objects.create_user(username='testclient2', password='password')
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
 
     def test_settings_view_status_code_200(self):
         """GET URL while logged in"""
