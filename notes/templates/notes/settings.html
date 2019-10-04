@@ -34,10 +34,6 @@ Settings @{{ user.get_username }}
         <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter new user name" value="{{ user.get_username }}">
         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
-<!--      <div class="form-group">-->
-<!--        <label for="inputPassword1">New Password</label>-->
-<!--        <input type="password" name="password" class="form-control" id="inputPassword1" placeholder="Password" value="{{ user.get_password }}">-->
-<!--      </div>-->
       <div class="form-group">
         <label for="iconFile">Icon</label>
           <p><img id="icon-preview" src="{{ user.icon_big.url }}" alt="N"></p>
