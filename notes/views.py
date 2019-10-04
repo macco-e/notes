@@ -10,6 +10,7 @@ from .models import Account, Follow, Notes
 
 
 # Auth -------------------------------------------------------------------------
+@login_required
 def redirect_to_home(request):
     return redirect('notes:home')
 
