@@ -27,6 +27,9 @@ class Account(AbstractUser):
         format='JPEG'
     )
 
+    def __str__(self):
+        return self.username
+
 
 class Follow(models.Model):
     follow = models.ForeignKey(Account, on_delete=models.CASCADE,

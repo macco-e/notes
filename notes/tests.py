@@ -162,3 +162,54 @@ class TestNotesView(TestCase):
              '<Notes: testclient1:aaaaa>']
         )
 
+
+class TestUsersView(TestCase):
+
+    def _follow(self, follow_user, follower_user):
+        from .models import Follow
+        f = Follow(follow=follow_user, follower=follower_user)
+        f.save()
+
+    def _create_note(self, author, text):
+        from .models import Notes
+        note = Notes(author=author, text=text)
+        note.save()
+
+    @classmethod
+    def setUpTestData(cls):
+        from .models import Account
+        cls.u1 = Account.objects.create_user(username='testclient1', password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2', password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3', password='password')
+        cls.url = reverse('notes:users')
+
+    def test_users_view_status_code_200(self):
+        """GET URL while logged in"""
+        self.client.force_login(self.u1)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_users_view_status_code_302(self):
+        """GET URL without logged in"""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/login/?next=/users/')
+
+    def test_users_view_get_users(self):
+        """Get all users"""
+        self.client.force_login(self.u1)
+        response = self.client.get(self.url)
+        self.assertQuerysetEqual(
+            response.context['users_list'],
+            ['<Account: testclient1>',
+             '<Account: testclient2>',
+             '<Account: testclient3>'], ordered=False)
+
+    def test_users_view_get_users_by_searchword(self):
+        """Get all users by search word"""
+        self.client.force_login(self.u1)
+        response = self.client.get(self.url, {'q': '1'})
+        self.assertQuerysetEqual(
+            response.context['users_list'],
+            ['<Account: testclient1>'], ordered=False)
+
