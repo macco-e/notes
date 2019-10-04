@@ -46,3 +46,6 @@ class Notes(models.Model):
 
     def get_format_created_at(self):
         return self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    def __str__(self):
+        return f'{self.author}:{self.text[:5]}'
