@@ -2,23 +2,31 @@ from django.test import TestCase
 from django.urls import reverse
 
 
-# Create your tests here.
+def create_follow(follow_user, follower_user):
+    from .models import Follow
+    f = Follow(follow=follow_user, follower=follower_user)
+    f.save()
+
+
+def create_note(author, text):
+    from .models import Notes
+    note = Notes(author=author, text=text)
+    note.save()
+
 
 class TestRedirectToHome(TestCase):
-    def test_redirect_to_home_logined(self):
+    def test_redirect_to_home_while_logged_in(self):
         """GET '/' while logged in"""
-        # Create Account
         from .models import Account
         self.u1 = Account.objects.create_user(username='testclient1',
                                               password='password')
-        # Log in
         self.client.force_login(self.u1)
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/home/')
 
-    def test_redirect_to_home_not_logined(self):
+    def test_redirect_to_home_without_logged_in(self):
         """GET '/' without logged in"""
         response = self.client.get('/')
         self.assertEqual(response.status_code, 302)
@@ -27,7 +35,7 @@ class TestRedirectToHome(TestCase):
 
 class TestSignupView(TestCase):
     def test_sign_up_view(self):
-        """GET sigup view"""
+        """GET signup view"""
         response = self.client.get(reverse('notes:signup'))
         self.assertEqual(response.status_code, 200)
 
@@ -97,16 +105,6 @@ class TestLoginView(TestCase):
 
 class TestHomeView(TestCase):
 
-    def _follow(self, follow_user, follower_user):
-        from .models import Follow
-        f = Follow(follow=follow_user, follower=follower_user)
-        f.save()
-
-    def _create_note(self, author, text):
-        from .models import Notes
-        note = Notes(author=author, text=text)
-        note.save()
-
     @classmethod
     def setUpTestData(cls):
         from .models import Account
@@ -119,13 +117,13 @@ class TestHomeView(TestCase):
 
         cls.url = reverse('notes:home')
 
-    def test_home_view_status_code_200(self):
+    def test_home_view_while_logged_in(self):
         """GET URL while logged in"""
         self.client.force_login(self.u1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_home_view_status_code_302(self):
+    def test_home_view_without_logged_in(self):
         """GET URL without logged in"""
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
@@ -139,9 +137,9 @@ class TestHomeView(TestCase):
         u2: follow   , noted 'world'
         u3: follow   , noted
         """
-        self._create_note(self.u1, 'hello')
-        self._create_note(self.u2, 'world')
-        self._follow(self.u1, self.u2)
+        create_note(self.u1, 'hello')
+        create_note(self.u2, 'world')
+        create_follow(self.u1, self.u2)
 
         # Check u1 context
         self.client.force_login(self.u1)
@@ -171,11 +169,11 @@ class TestHomeView(TestCase):
         """
         Check the search function for notes extracted from follow relationships
         """
-        self._create_note(self.u1, 'aaaaa')
-        self._create_note(self.u1, 'bbbbb')
-        self._create_note(self.u2, 'abbbb')
-        self._create_note(self.u2, 'bbbbb')
-        self._follow(self.u1, self.u2)
+        create_note(self.u1, 'aaaaa')
+        create_note(self.u1, 'bbbbb')
+        create_note(self.u2, 'abbbb')
+        create_note(self.u2, 'bbbbb')
+        create_follow(self.u1, self.u2)
 
         self.client.force_login(self.u1)
 
@@ -188,16 +186,6 @@ class TestHomeView(TestCase):
 
 class TestNotesView(TestCase):
 
-    def _follow(self, follow_user, follower_user):
-        from .models import Follow
-        f = Follow(follow=follow_user, follower=follower_user)
-        f.save()
-
-    def _create_note(self, author, text):
-        from .models import Notes
-        note = Notes(author=author, text=text)
-        note.save()
-
     @classmethod
     def setUpTestData(cls):
         from .models import Account
@@ -209,13 +197,13 @@ class TestNotesView(TestCase):
                                              password='password')
         cls.url = reverse('notes:notes')
 
-    def test_notes_view_status_code_200(self):
+    def test_notes_view_while_logged_in(self):
         """GET URL while logged in"""
         self.client.force_login(self.u1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_notes_view_status_code_302(self):
+    def test_notes_view_without_logged_in(self):
         """GET URL without logged in"""
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
@@ -228,9 +216,9 @@ class TestNotesView(TestCase):
         u2: noted 'test2'
         u3: noted 'test3'
         """
-        self._create_note(self.u1, 'test1')
-        self._create_note(self.u2, 'test2')
-        self._create_note(self.u3, 'test3')
+        create_note(self.u1, 'test1')
+        create_note(self.u2, 'test2')
+        create_note(self.u3, 'test3')
 
         # Check if all notes can be extracted
         self.client.force_login(self.u1)
@@ -243,12 +231,12 @@ class TestNotesView(TestCase):
 
     def test_notes_view_search_notes(self):
         """Check the search function for all notes"""
-        self._create_note(self.u1, 'aaaaa')
-        self._create_note(self.u1, 'bbbbb')
-        self._create_note(self.u2, 'aaaaa')
-        self._create_note(self.u2, 'bbbbb')
-        self._create_note(self.u3, 'aaaaa')
-        self._create_note(self.u3, 'bbbbb')
+        create_note(self.u1, 'aaaaa')
+        create_note(self.u1, 'bbbbb')
+        create_note(self.u2, 'aaaaa')
+        create_note(self.u2, 'bbbbb')
+        create_note(self.u3, 'aaaaa')
+        create_note(self.u3, 'bbbbb')
 
         # Check if all notes can be extracted by search words
         self.client.force_login(self.u1)
@@ -263,16 +251,6 @@ class TestNotesView(TestCase):
 
 class TestUsersView(TestCase):
 
-    def _follow(self, follow_user, follower_user):
-        from .models import Follow
-        f = Follow(follow=follow_user, follower=follower_user)
-        f.save()
-
-    def _create_note(self, author, text):
-        from .models import Notes
-        note = Notes(author=author, text=text)
-        note.save()
-
     @classmethod
     def setUpTestData(cls):
         from .models import Account
@@ -284,13 +262,13 @@ class TestUsersView(TestCase):
                                              password='password')
         cls.url = reverse('notes:users')
 
-    def test_users_view_status_code_200(self):
+    def test_users_view_while_logged_in(self):
         """GET URL while logged in"""
         self.client.force_login(self.u1)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_users_view_status_code_302(self):
+    def test_users_view_without_logged_in(self):
         """GET URL without logged in"""
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
@@ -317,16 +295,6 @@ class TestUsersView(TestCase):
 
 class TestUserView(TestCase):
 
-    def _follow(self, follow_user, follower_user):
-        from .models import Follow
-        f = Follow(follow=follow_user, follower=follower_user)
-        f.save()
-
-    def _create_note(self, author, text):
-        from .models import Notes
-        note = Notes(author=author, text=text)
-        note.save()
-
     @classmethod
     def setUpTestData(cls):
         from .models import Account
@@ -337,7 +305,7 @@ class TestUserView(TestCase):
         cls.u3 = Account.objects.create_user(username='testclient3',
                                              password='password')
 
-    def test_user_view_status_code_200(self):
+    def test_user_view_while_logged_in(self):
         """GET URL while logged in"""
         self.client.force_login(self.u1)
 
@@ -346,7 +314,7 @@ class TestUserView(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_user_view_status_code_302(self):
+    def test_user_view_without_logged_in(self):
         """GET URL without logged in"""
         url = reverse('notes:user_page', args=(self.u1.pk,))
         response = self.client.get(url)
@@ -366,8 +334,8 @@ class TestUserView(TestCase):
 
     def test_user_view_get_num_follow(self):
         """Get the number of follows of the target user"""
-        self._follow(self.u1, self.u2)
-        self._follow(self.u1, self.u3)
+        create_follow(self.u1, self.u2)
+        create_follow(self.u1, self.u3)
 
         self.client.force_login(self.u1)
 
@@ -378,8 +346,8 @@ class TestUserView(TestCase):
 
     def test_user_view_get_num_follower(self):
         """Get the number of followers of the target user"""
-        self._follow(self.u2, self.u1)
-        self._follow(self.u3, self.u1)
+        create_follow(self.u2, self.u1)
+        create_follow(self.u3, self.u1)
 
         self.client.force_login(self.u1)
 
@@ -390,7 +358,7 @@ class TestUserView(TestCase):
 
     def test_user_view_get_is_follow(self):
         """Get Whether the logged-in user is following the target user"""
-        self._follow(self.u1, self.u2)
+        create_follow(self.u1, self.u2)
 
         self.client.force_login(self.u1)
 
@@ -401,9 +369,9 @@ class TestUserView(TestCase):
 
     def test_user_view_get_notes(self):
         """Get user notes"""
-        self._create_note(self.u1, 'aaaaa')
-        self._create_note(self.u1, 'bbbbb')
-        self._create_note(self.u1, 'ccccc')
+        create_note(self.u1, 'aaaaa')
+        create_note(self.u1, 'bbbbb')
+        create_note(self.u1, 'ccccc')
 
         self.client.force_login(self.u1)
 
@@ -419,10 +387,10 @@ class TestUserView(TestCase):
 
     def test_user_view_get_notes_by_searchword(self):
         """Get user notes by search word"""
-        self._create_note(self.u1, 'aaaaa')
-        self._create_note(self.u1, 'bbbbb')
-        self._create_note(self.u1, 'ccccc')
-        self._create_note(self.u1, 'adddd')
+        create_note(self.u1, 'aaaaa')
+        create_note(self.u1, 'bbbbb')
+        create_note(self.u1, 'ccccc')
+        create_note(self.u1, 'adddd')
 
         self.client.force_login(self.u1)
 
@@ -435,6 +403,166 @@ class TestUserView(TestCase):
              '<Notes: testclient1:aaaaa>'], ordered=True)
 
 
+class TestUserFollowView(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        from .models import Account
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3',
+                                             password='password')
+
+    def test_user_follower_view_while_logged_in(self):
+        """GET URL while logged in"""
+        self.client.force_login(self.u1)
+        url = reverse('notes:user_follow_list', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_follower_view_without_logged_in(self):
+        """GET URL without logged in"""
+        url = reverse('notes:user_follow_list', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response,
+                             f'/login/?next=/user/{self.u1.pk}/follow')
+
+    def test_user_follow_view_get_accounts_list(self):
+        """Get follow account list of target user"""
+        create_follow(self.u1, self.u2)
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_follow_list', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.context['relation'], 'Follow')
+        self.assertQuerysetEqual(response.context['accounts_list'],
+                                 ['<Account: testclient2>'])
+
+    def test_user_follow_view_get_accounts_list_by_searchword(self):
+        """Get follow account list of target user by search word"""
+        create_follow(self.u1, self.u2)
+        create_follow(self.u1, self.u3)
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_follow_list', args=(self.u1.pk,))
+        response = self.client.get(url, {'q': '3'})
+
+        self.assertEqual(response.context['relation'], 'Follow')
+        self.assertQuerysetEqual(response.context['accounts_list'],
+                                 ['<Account: testclient3>'])
+
+
+class TestUserFollowerView(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        from .models import Account
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3',
+                                             password='password')
+
+    def test_user_follower_view_while_logged_in(self):
+        """GET URL while logged in"""
+        self.client.force_login(self.u1)
+        url = reverse('notes:user_follower_list', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_follower_view_without_logged_in(self):
+        """GET URL without logged in"""
+        url = reverse('notes:user_follower_list', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response,
+                             f'/login/?next=/user/{self.u1.pk}/follower')
+
+    def test_user_follower_view_get_accounts_list(self):
+        """Get follower account list of target user"""
+        create_follow(self.u2, self.u1)
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_follower_list', args=(self.u1.pk,))
+        response = self.client.get(url)
+        self.assertEqual(response.context['relation'], 'Follower')
+        self.assertQuerysetEqual(response.context['accounts_list'],
+                                 ['<Account: testclient2>'])
+
+    def test_user_follower_view_get_accounts_list_by_searchword(self):
+        """Get follower account list of target user by search word"""
+        create_follow(self.u2, self.u1)
+        create_follow(self.u3, self.u1)
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:user_follower_list', args=(self.u1.pk,))
+        response = self.client.get(url, {'q': '3'})
+
+        self.assertEqual(response.context['relation'], 'Follower')
+        self.assertQuerysetEqual(response.context['accounts_list'],
+                                 ['<Account: testclient3>'])
+
+
+class TestFollow(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        from .models import Account
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3',
+                                             password='password')
+
+    def test_follow(self):
+        from .models import Follow
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:follow', args=(self.u2.pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/user/{self.u2.pk}')
+        self.assertQuerysetEqual(Follow.objects.all(),
+                                 ['<Follow: testclient1-testclient2>'])
+
+
+class TestUnfollow(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        from .models import Account
+        cls.u1 = Account.objects.create_user(username='testclient1',
+                                             password='password')
+        cls.u2 = Account.objects.create_user(username='testclient2',
+                                             password='password')
+        cls.u3 = Account.objects.create_user(username='testclient3',
+                                             password='password')
+
+    def test_follow(self):
+        from .models import Follow
+
+        create_follow(self.u1, self.u2)
+
+        self.client.force_login(self.u1)
+
+        url = reverse('notes:unfollow', args=(self.u2.pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/user/{self.u2.pk}')
+        self.assertQuerysetEqual(Follow.objects.all(), [])
+
+
 class TestSettingsView(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -444,14 +572,14 @@ class TestSettingsView(TestCase):
         cls.u2 = Account.objects.create_user(username='testclient2',
                                              password='password')
 
-    def test_settings_view_status_code_200(self):
+    def test_settings_view_while_logged_in(self):
         """GET URL while logged in"""
         self.client.force_login(self.u1)
         url = reverse('notes:settings', args=(self.u1.pk,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_settings_view_status_code_302(self):
+    def test_settings_view_without_logged_in(self):
         """GET URL without logged in"""
         url = reverse('notes:settings', args=(self.u1.pk,))
         response = self.client.get(url)

@@ -3,7 +3,7 @@ from django.urls import include, path
 
 from .views import sign_up_view, create_user, login_view, HomeView, logout_view, PostNoteView, SettingsView, follow, unfollow
 from .views import NoteDetailView, delete_note, NoteUpdateView, redirect_to_home
-from .views import NotesView, UsersView, UserView, UserRelationshipView
+from .views import NotesView, UsersView, UserView, UserFollowView, UserFollowerView
 
 app_name = 'notes'
 urlpatterns = [
@@ -18,9 +18,9 @@ urlpatterns = [
     path('notes/', NotesView.as_view(), name='notes'),
     path('users/', UsersView.as_view(), name='users'),
     path('user/<int:pk>', UserView.as_view(), name='user_page'),
-    path('user/<int:pk>/follow', UserRelationshipView.as_view(),
+    path('user/<int:pk>/follow', UserFollowView.as_view(),
          name='user_follow_list'),
-    path('user/<int:pk>/follower', UserRelationshipView.as_view(),
+    path('user/<int:pk>/follower', UserFollowerView.as_view(),
          name='user_follower_list'),
 
     path('follow/<int:pk>', follow, name='follow'),
