@@ -13,7 +13,7 @@
 
 
 {% block search_form %}
-    {% url 'notes:search_home_redirect' %}
+    {% url 'notes:note_detail' note.id %}
 {% endblock search_form %}
 
 {% block search_form_placeholder %}
@@ -33,7 +33,7 @@
 {% block content %}
  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
      <div style="text-align: right;">
-         {% if user.id == note.noted_user_id.id %}
+         {% if user.id == note.author.id %}
             <a href="{% url 'notes:note_update' note.id %}" class="btn btn-success" role="button" aria-pressed="true">Edit</a>
             <a href="{% url 'notes:note_delete' note.id %}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
          {% endif %}

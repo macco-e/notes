@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'notes',
     'django_mysql',
     'markdown',
+    'debug_toolbar',
 ]
 
 AUTH_USER_MODEL = 'notes.Account'
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'notes_project.urls'
@@ -141,3 +143,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 LOGIN_URL = '/login/'
+
+
+INTERNAL_IPS = ['127.0.0.1']
