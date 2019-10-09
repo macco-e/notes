@@ -3,13 +3,13 @@ from django.urls import reverse
 
 
 def create_follow(follow_user, follower_user):
-    from .models import Follow
+    from notes.models import Follow
     f = Follow(follow=follow_user, follower=follower_user)
     f.save()
 
 
 def create_note(author, text):
-    from .models import Notes
+    from notes.models import Notes
     note = Notes(author=author, text=text)
     note.save()
 
@@ -17,7 +17,7 @@ def create_note(author, text):
 class TestRedirectToHome(TestCase):
     def test_redirect_to_home_while_logged_in(self):
         """GET '/' while logged in"""
-        from .models import Account
+        from notes.models import Account
         self.u1 = Account.objects.create_user(username='testclient1',
                                               password='password')
         self.client.force_login(self.u1)
@@ -43,7 +43,7 @@ class TestSignupView(TestCase):
 class TestCreateUser(TestCase):
     def test_create_user(self):
         """Create user with POST"""
-        from .models import Account
+        from notes.models import Account
 
         post_data = {'username': 'testclient1', 'password': 'password'}
 
@@ -73,7 +73,7 @@ class TestCreateUser(TestCase):
 class TestLoginView(TestCase):
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.url = reverse('notes:login')
@@ -115,7 +115,7 @@ class TestLoginView(TestCase):
 
 class TestLogout(TestCase):
     def test_logout(self):
-        from .models import Account
+        from notes.models import Account
 
         u1 = Account.objects.create_user(username='testclient1',
                                          password='password')
@@ -137,7 +137,7 @@ class TestHomeView(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',
@@ -218,7 +218,7 @@ class TestNotesView(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',
@@ -283,7 +283,7 @@ class TestUsersView(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',
@@ -327,7 +327,7 @@ class TestUserView(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',
@@ -437,7 +437,7 @@ class TestUserFollowView(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',
@@ -491,7 +491,7 @@ class TestUserFollowerView(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',
@@ -544,7 +544,7 @@ class TestUserFollowerView(TestCase):
 class TestFollow(TestCase):
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',
@@ -553,7 +553,7 @@ class TestFollow(TestCase):
                                              password='password')
 
     def test_follow(self):
-        from .models import Follow
+        from notes.models import Follow
 
         self.client.force_login(self.u1)
 
@@ -570,7 +570,7 @@ class TestUnfollow(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',
@@ -579,7 +579,7 @@ class TestUnfollow(TestCase):
                                              password='password')
 
     def test_follow(self):
-        from .models import Follow
+        from notes.models import Follow
 
         create_follow(self.u1, self.u2)
 
@@ -596,7 +596,7 @@ class TestUnfollow(TestCase):
 class TestSettingsView(TestCase):
     @classmethod
     def setUpTestData(cls):
-        from .models import Account
+        from notes.models import Account
         cls.u1 = Account.objects.create_user(username='testclient1',
                                              password='password')
         cls.u2 = Account.objects.create_user(username='testclient2',

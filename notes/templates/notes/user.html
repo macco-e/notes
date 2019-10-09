@@ -32,7 +32,7 @@
 
 {% block board_title %}
 <img src="{{ target_user.icon_big.url }}" alt="N">
-@ {{ target_user }}
+<span class="target-username">@ {{ target_user }}</span>
 
 {% if user.id != self_pk %}
     {% if is_follow %}
