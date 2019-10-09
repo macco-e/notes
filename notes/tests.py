@@ -59,6 +59,16 @@ class TestCreateUser(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('notes:signup'))
 
+    def test_create_user_duplicate(self):
+        post_data = {'username': 'testclient1', 'password': 'password'}
+
+        # Duplicate user registration
+        self.client.post(reverse('notes:create_user'), post_data)
+        response = self.client.post(reverse('notes:create_user'), post_data)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('notes:signup'))
+
 
 class TestLoginView(TestCase):
     @classmethod
@@ -101,6 +111,26 @@ class TestLoginView(TestCase):
         response = self.client.post(self.url, post_data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'ユーザ名かパスワードが間違っています')
+
+
+class TestLogout(TestCase):
+    def test_logout(self):
+        from .models import Account
+
+        u1 = Account.objects.create_user(username='testclient1',
+                                         password='password')
+        # Log in
+        self.client.force_login(u1)
+
+        # Log out
+        response = self.client.get(reverse('notes:logout'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/login/')
+
+        # GET /home without logged in
+        response = self.client.get(reverse('notes:home'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/login/?next=/home/')
 
 
 class TestHomeView(TestCase):
