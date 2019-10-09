@@ -36,6 +36,7 @@ jobs:
             pip install pillow
             pip install markdown
             pip install django
+            pip install django-mysql
 
       - save_cache:
           paths:
