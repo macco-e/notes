@@ -169,43 +169,46 @@ class UserView(LoginRequiredMixin, ListView):
 
 # Relation ---------------------------------------------------------------------
 
-class UserRelationshipView(LoginRequiredMixin, ListView):
+class UserFollowView(LoginRequiredMixin, ListView):
     template_name = 'notes/user_relationship.html'
     context_object_name = 'accounts_list'
 
     def get_queryset(self):
-        path = self.request.path
-        relation = path.split('/')[-1]
+        follows_obj = Follow.objects.filter(follow=self.kwargs['pk'])
+        follows_pk = [str(follow_obj.follower.pk) for follow_obj in
+                      follows_obj]
 
-        if relation == 'follow':
-            # Render follow list
-            follows_obj = Follow.objects.filter(follow=self.kwargs['pk'])
-            follows_pk = [str(follow_obj.follower.pk) for follow_obj in follows_obj]
-
-            if self.request.GET.get('q'):
-                # render searched follow list
-                search_word = self.request.GET['q']
-                return Account.objects.filter(pk__in=follows_pk,
-                                              username__contains=search_word)
-            else:
-                return Account.objects.filter(pk__in=follows_pk)
-
-        if relation == 'follower':
-            # Render follower list
-            followers_obj = Follow.objects.filter(follower=self.kwargs['pk'])
-            followers_pk = [str(follower_obj.follow.pk) for follower_obj in followers_obj]
-
-            if self.request.GET.get('q'):
-                # Render searched follower list
-                search_word = self.request.GET['q']
-                return Account.objects.filter(pk__in=followers_pk,
-                                              username__contains=search_word)
-            else:
-                return Account.objects.filter(pk__in=followers_pk)
+        if self.request.GET.get('q'):
+            search_word = self.request.GET['q']
+            return Account.objects.filter(pk__in=follows_pk,
+                                          username__contains=search_word)
+        else:
+            return Account.objects.filter(pk__in=follows_pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['relation'] = self.request.path.split('/')[-1]
+        context['relation'] = 'Follow'
+        return context
+
+
+class UserFollowerView(LoginRequiredMixin, ListView):
+    template_name = 'notes/user_relationship.html'
+    context_object_name = 'accounts_list'
+
+    def get_queryset(self):
+        followers_obj = Follow.objects.filter(follower=self.kwargs['pk'])
+        followers_pk = [str(follower_obj.follow.pk) for follower_obj in followers_obj]
+
+        if self.request.GET.get('q'):
+            search_word = self.request.GET['q']
+            return Account.objects.filter(pk__in=followers_pk,
+                                          username__contains=search_word)
+        else:
+            return Account.objects.filter(pk__in=followers_pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['relation'] = 'Follower'
         return context
 
 

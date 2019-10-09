@@ -37,12 +37,18 @@ class Follow(models.Model):
     follower = models.ForeignKey(Account, on_delete=models.CASCADE,
                                     related_name='follower_id')
 
+    def __str__(self):
+        return f'{self.follow.username}-{self.follower.username}'
+
 
 class Notes(models.Model):
     author = models.ForeignKey(Account, on_delete=models.CASCADE)
     text = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     images = models.ImageField(upload_to='', blank=True, default='')
+
+    class Meta:
+        ordering = ['-created_at']
 
     def get_text_as_markdown(self):
         return mark_safe(markdown(self.text, safe_mode='escape'))
