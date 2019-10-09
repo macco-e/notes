@@ -44,7 +44,7 @@ jobs:
             sudo apt-get install build-essential
             sudo apt-get install mysql-server
             pip install mysqlclient
-            sudo systemctl start mysql
+            mysql.server start
             python manage.py makemigrations
             python manage.py migrate
 
