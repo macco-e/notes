@@ -34,7 +34,7 @@
           </form>
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-              <a class="nav-link" href="{% url 'notes:logout' %}">Logout</a>
+              <a class="nav-link logout-btn" href="{% url 'notes:logout' %}">Logout</a>
             </li>
           </ul>
       </nav>
@@ -48,37 +48,44 @@
               <li class="nav-item">
                 <a class="nav-link {% block active_home %}{% endblock active_home %}" href="{% url 'notes:home' %}">
                   <span data-feather="home"></span>
+                    <p class>Home</p>
                 </a>
               </li>
-                <p class>Home</p>
+
 
               <li class="nav-item">
                 <a class="nav-link {% block active_all_notes %}{% endblock active_all_notes %}" href="{% url 'notes:notes' %}">
                   <span data-feather="book"></span>
+                    <p>All notes</p>
                 </a>
               </li>
-                <p>All notes</p>
+
 
               <li class="nav-item">
                 <a class="nav-link {% block active_users %}{% endblock active_users %}" href="{% url 'notes:users' %}">
                   <span data-feather="users"></span>
+                    <p>Users</p>
                 </a>
+
               </li>
-                <p>Users</p>
+
 
               <li class="nav-item">
                 <a class="nav-link {% block active_mypage %}{% endblock active_mypage %}" href="{% url 'notes:user_page' user.id %}">
                   <span data-feather="user"></span>
+                    <p>My page</p>
                 </a>
+
               </li>
-                <p>My page</p>
+
 
               <li class="nav-item">
                 <a class="nav-link {% block active_settings %}{% endblock active_settings %}" href="{% url 'notes:settings' user.id %}">
                   <span data-feather="settings"></span>
+                     <p>settings</p>
                 </a>
               </li>
-                <p>settings</p>
+
 
             </ul>
           </div>
