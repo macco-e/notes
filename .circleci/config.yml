@@ -42,7 +42,8 @@ jobs:
             sudo apt-get update
             sudo apt-get install python-dev python3-dev
             sudo apt-get install build-essential
-            sudo apt-get install mysql-server
+            sudo apt-get install mysql-server mysql-client
+            sudo mysql_secure_installation
             pip install mysqlclient
             mysql.server start
             python manage.py makemigrations
