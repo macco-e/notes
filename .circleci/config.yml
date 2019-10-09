@@ -37,6 +37,8 @@ jobs:
             pip install markdown
             pip install django
             pip install django-mysql
+            pip install django-debug-toolbar
+            pip install django-imagekit
 
       - save_cache:
           paths:
