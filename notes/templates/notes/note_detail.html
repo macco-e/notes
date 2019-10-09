@@ -39,6 +39,16 @@
          {% endif %}
      </div>
   <div class="my-3 p-3 bg-white rounded shadow-sm">
+       <div class="media text-muted pt-3">
+            <a href="{% url 'notes:user_page' note.author.id %}">
+                <img src="{{ note.author.icon_small.url }}" alt="N">
+            </a>
+            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">
+                    <a href="{% url 'notes:user_page' note.author.id %}">@{{ note.author }}</a> Posted at: {{ note.get_format_created_at }}
+                </strong>
+            </p>
+        </div>
         <div style="margin:0 30px;">
             {{ note.get_text_as_markdown }}
         </div>
