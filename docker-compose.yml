@@ -12,7 +12,7 @@ services:
       - "3306:3306"
   web:
     build: .
-    command: python notes_project/manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
