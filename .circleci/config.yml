@@ -7,6 +7,8 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6-browsers
+        environment:
+          - DATABASE_URL: mysql://root@localhost:3306/circle_test?sslmode=disable
       - image: circleci/mysql:5.7
         environment:
           - MYSQL_DATABASE: notes_project
@@ -31,7 +33,7 @@ jobs:
           name: Running tests
           command: |
             . venv/bin/activate
-            docker-compose run web python manage.py test
+            python manage.py test
       - store_artifacts:
           path: test-reports/
           destination: python_app
