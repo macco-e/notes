@@ -2,69 +2,29 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2.1
+version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.7.3
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-      - image: circleci/mysql:latest
-
-    working_directory: ~/repo
-
+      - image: circleci/python:3.6-browsers
     steps:
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
-          name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install pillow
-            pip install markdown
-            pip install django
-            pip install django-mysql
-            pip install django-debug-toolbar
-            pip install django-imagekit
-            sudo apt-get update
-            sudo apt-get install systemd
-            sudo apt-get install python-dev python3-dev
-            sudo apt-get install build-essential
-            sudo apt-get install mysql-server mysql-client
-            pip install mysqlclient
-            sudo systemctl start mysql
-            python manage.py makemigrations
-            python manage.py migrate
-
+            pip install -r requirements.txt
       - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
+            - "venv"
       - run:
-          name: run tests
+          name: Running tests
           command: |
             . venv/bin/activate
-            python manage.py test
-
+            python3 manage.py test
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
+          path: test-reports/
+          destination: python_app
