@@ -16,12 +16,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: docker-compose build
-          command: docker-compose build
-      - run:
-          name: Start container
-          command: docker-compose up
       - restore_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
