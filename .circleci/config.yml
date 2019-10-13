@@ -8,7 +8,7 @@ jobs:
     docker:
       - image: circleci/python:3.6-browsers
         environment:
-          - DB_HOST: 127.0.0.1
+          - DB_HOST: 0.0.0.0
       - image: circleci/mysql:5.7
         environment:
           - MYSQL_DATABASE: notes_project
@@ -29,6 +29,12 @@ jobs:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "venv"
+      - run:
+          name: initialize db
+          command: |
+            . venv/bin/activate
+            python manage.py makemigrations
+            python manage.py migrate
       - run:
           name: Running tests
           command: |
