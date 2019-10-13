@@ -9,10 +9,10 @@ jobs:
       - image: circleci/python:3.6-browsers
       - image: circleci/mysql:5.7
         environment:
-          MYSQL_DATABASE: notes_project
-          MYSQL_USER: root
-          MYSQL_PASSWORD: root
-          MYSQL_ROOT_PASSWORD: root
+          - MYSQL_DATABASE: notes_project
+          - MYSQL_USER: root
+          - MYSQL_PASSWORD: root
+          - MYSQL_ROOT_PASSWORD: root
     steps:
       - checkout
       - setup_remote_docker
