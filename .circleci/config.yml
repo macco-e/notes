@@ -40,12 +40,12 @@ jobs:
           name: Install MySQL CLI
           command: |
             sudo apt-get install default-mysql-client
-      - run:
-          name: initialize db
-          command: |
-            . venv/bin/activate
-            python manage.py makemigrations
-            python manage.py migrate
+#      - run:
+#          name: initialize db
+#          command: |
+#            . venv/bin/activate
+#            python manage.py makemigrations
+#            python manage.py migrate
       - run:
           name: Running tests
           command: |
