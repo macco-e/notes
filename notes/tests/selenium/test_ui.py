@@ -3,6 +3,17 @@ from django.urls import reverse
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 
+base_url = 'http://127.0.0.1:8000'
+
+
+class AccessTest(LiveServerTestCase):
+    def test_access(self):
+        self.selenium = WebDriver()
+        self.selenium.get(base_url + '/login')
+        self.assertEquals('Login', self.selenium.title)
+        self.selenium.quit()
+
+
 class LoginTest(LiveServerTestCase):
     @classmethod
     def setUpClass(cls):
@@ -15,7 +26,7 @@ class LoginTest(LiveServerTestCase):
         super().tearDownClass()
 
     def setUp(self):
-        self.selenium.get('http://localhost:8000' + str(reverse('notes:login')))
+        self.selenium.get(base_url + str(reverse('notes:login')))
 
     def test_login_success(self):
         username_input = self.selenium.find_element_by_name("username")
@@ -44,7 +55,7 @@ class LogoutTest(LiveServerTestCase):
         super().setUpClass()
         cls.selenium = WebDriver()
 
-        cls.selenium.get('http://localhost:8000' + str(reverse('notes:login')))
+        cls.selenium.get(base_url + str(reverse('notes:login')))
 
     @classmethod
     def tearDownClass(cls):
@@ -52,7 +63,7 @@ class LogoutTest(LiveServerTestCase):
         super().tearDownClass()
 
     def setUp(self):
-        self.selenium.get('http://localhost:8000' + str(reverse('notes:login')))
+        self.selenium.get(base_url + str(reverse('notes:login')))
 
     def test_logout(self):
         username_input = self.selenium.find_element_by_name("username")
@@ -76,7 +87,7 @@ class TestHome(LiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.selenium = WebDriver()
-        cls.selenium.get('http://localhost:8000' + str(reverse('notes:login')))
+        cls.selenium.get(base_url + str(reverse('notes:login')))
 
         # Log in
         username_input = cls.selenium.find_element_by_name("username")
@@ -91,7 +102,7 @@ class TestHome(LiveServerTestCase):
         super().tearDownClass()
 
     def setUp(self):
-        self.selenium.get('http://localhost:8000' + str(reverse('notes:home')))
+        self.selenium.get(base_url + str(reverse('notes:home')))
 
     def test_home_view(self):
         # Login username
@@ -104,31 +115,31 @@ class TestHome(LiveServerTestCase):
 
     def test_home_view_link(self):
         # Link Home
-        self.selenium.get('http://localhost:8000' + str(reverse('notes:home')))
+        self.selenium.get(base_url + str(reverse('notes:home')))
         self.selenium.find_element_by_link_text('Home').click()
         element = self.selenium.find_element_by_tag_name('h1')
         self.assertIn(element.text, 'Home')
 
         # Link All notes
-        self.selenium.get('http://localhost:8000' + str(reverse('notes:home')))
+        self.selenium.get(base_url + str(reverse('notes:home')))
         self.selenium.find_element_by_link_text('All notes').click()
         element = self.selenium.find_element_by_tag_name('h1')
         self.assertIn(element.text, 'All notes')
 
         # Link Users
-        self.selenium.get('http://localhost:8000' + str(reverse('notes:home')))
+        self.selenium.get(base_url + str(reverse('notes:home')))
         self.selenium.find_element_by_link_text('Users').click()
         element = self.selenium.find_element_by_tag_name('h1')
         self.assertIn(element.text, 'Users')
 
         # Link My page
-        self.selenium.get('http://localhost:8000' + str(reverse('notes:home')))
+        self.selenium.get(base_url + str(reverse('notes:home')))
         self.selenium.find_element_by_link_text('My page').click()
         element = self.selenium.find_element_by_class_name('target-username')
         self.assertIn(element.text, '@ admin')
 
         # Link settings
-        self.selenium.get('http://localhost:8000' + str(reverse('notes:home')))
+        self.selenium.get(base_url + str(reverse('notes:home')))
         self.selenium.find_element_by_link_text('settings').click()
         element = self.selenium.find_element_by_tag_name('h1')
         self.assertIn(element.text, 'Settings @admin')

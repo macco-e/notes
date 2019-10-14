@@ -11,20 +11,25 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_ROOT_HOST: "%"
+          MYSQL_DATABASE: notes_project
 
     steps:
       - checkout
       - restore_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+
       - run:
+          name: Install dependencies
           command: |
             python -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+
       - save_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "venv"
+            -
       - run:
           name: Waiting for MySQL to be ready
           command: |
@@ -35,15 +40,33 @@ jobs:
               sleep 1
             done
             echo Failed waiting for MySQL && exit 1
+
       - run:
-          name: Install MySQL CLI
+          name: Migrate for unittest
           command: |
-            sudo apt-get install default-mysql-client
+            . venv/bin/activate
+            python manage.py makemigrations
+            python manage.py migrate
+
+      - run:
+          name: Create superuser for unittest
+          command: |
+            . venv/bin/activate
+            echo "from notes.models import Account; Account.objects.create_superuser('admin', '', 'admin')" | python manage.py shell
+
+      - run:
+          name: Run server in the background for selenium
+          command: |
+            . venv/bin/activate
+            python manage.py runserver 8000
+          background: true
+
       - run:
           name: Running tests
           command: |
             . venv/bin/activate
             python manage.py test
+
       - store_artifacts:
           path: test-reports/
           destination: python_app

@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='account',
             name='icon',
-            field=models.ImageField(blank=True, default='icons/iconfinder_profle_1055000.png', upload_to='icons'),
+            field=models.ImageField(blank=True, default='icons/default.png', upload_to='icons'),
         ),
     ]
