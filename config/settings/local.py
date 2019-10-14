@@ -1,3 +1,7 @@
+import socket
+import os
+
+
 from .base import *
 
 
@@ -10,6 +14,7 @@ SECRET_KEY = '3x376#-n@_zt%1gbbxkx65c(6m(vobk%3$=^6eopt@*d_(6w%h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 INSTALLED_APPS += (
     'debug_toolbar',
 )
@@ -18,7 +23,8 @@ MIDDLEWARE += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-INTERNAL_IPS = ['127.0.0.1']
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = ['127.0.0.1', 'localhost'] + [ip[:-1] + '1' for ip in ips]
 
 
 # Database
@@ -28,7 +34,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'notes_project',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'root',
+        # 'HOST': 'db',
+        'HOST': '127.0.0.1',
+        'PORT': 3306,
         'OPTIONS': {
             'charset': 'utf8mb4',
         },
