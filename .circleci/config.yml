@@ -26,7 +26,6 @@ jobs:
           paths:
             - "venv"
       - run:
-          # Our primary container isn't MYSQL so run a sleep command until it's ready.
           name: Waiting for MySQL to be ready
           command: |
             for i in `seq 1 10`;
@@ -40,12 +39,6 @@ jobs:
           name: Install MySQL CLI
           command: |
             sudo apt-get install default-mysql-client
-#      - run:
-#          name: initialize db
-#          command: |
-#            . venv/bin/activate
-#            python manage.py makemigrations
-#            python manage.py migrate
       - run:
           name: Running tests
           command: |
