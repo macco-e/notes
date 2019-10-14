@@ -8,13 +8,13 @@ jobs:
     docker:
       - image: circleci/python:3.6-browsers
         environment:
-          - DB_HOST: 0.0.0.0
+          - DB_HOST: 127.0.0.1
       - image: circleci/mysql:5.7
         environment:
-          - MYSQL_DATABASE: notes_project
           - MYSQL_USER: root
           - MYSQL_PASSWORD: root
           - MYSQL_ROOT_PASSWORD: root
+          - MYSQL_ALLOW_EMPTY_PASSWORD: yes
     steps:
       - checkout
       - setup_remote_docker
