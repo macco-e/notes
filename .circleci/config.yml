@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6-browsers
-      - image: circleci/mysql:5.7
+      - image: circleci/mysql:5.7.27
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: notes_project
