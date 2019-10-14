@@ -7,17 +7,15 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6-browsers
-        environment:
-          - DB_HOST: 127.0.0.1
       - image: circleci/mysql:5.7
         environment:
-          - MYSQL_USER: root
-          - MYSQL_PASSWORD: root
-          - MYSQL_ROOT_PASSWORD: root
-          - MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: notes_project
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+
     steps:
       - checkout
-      - setup_remote_docker
       - restore_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
@@ -30,8 +28,20 @@ jobs:
           paths:
             - "venv"
       - run:
-          name: Wait for DB
-          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
+          # Our primary container isn't MYSQL so run a sleep command until it's ready.
+          name: Waiting for MySQL to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z 127.0.0.1 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Install MySQL CLI
+          command: |
+            sudo apt-get install default-mysql-client
       - run:
           name: initialize db
           command: |
@@ -46,3 +56,9 @@ jobs:
       - store_artifacts:
           path: test-reports/
           destination: python_app
+
+    workflows:
+      version: 2
+      build-deploy:
+        jobs:
+          - build
