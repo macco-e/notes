@@ -35,7 +35,7 @@ Users
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
     <div class="my-3 p-3 bg-white rounded shadow-sm">
-        <h6 class="border-bottom border-gray pb-2 mb-0">Follow list</h6>
+        <h6 class="border-bottom border-gray pb-2 mb-0">Users list</h6>
         {% for each_user in users_list %}
         <div class="media text-muted pt-3">
             <a href="{% url 'notes:user_page' each_user.pk %}">

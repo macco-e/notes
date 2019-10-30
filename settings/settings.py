@@ -12,11 +12,21 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = str(os.environ.get('SECRET_KEY'))
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = bool(os.environ.get('DEBUG'))
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = str(os.environ.get('DJANGO_ALLOWED_HOSTS')).split(' ')
 
 
 # Application definition
@@ -33,6 +43,9 @@ INSTALLED_APPS = [
     'markdown',
 ]
 
+if os.environ.get('INSTALLED_APPS'):
+    INSTALLED_APPS.append(str(os.environ.get('INSTALLED_APPS')))
+
 AUTH_USER_MODEL = 'notes.Account'
 
 MIDDLEWARE = [
@@ -45,7 +58,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+if os.environ.get('MIDDLEWARE'):
+    MIDDLEWARE.append(str(os.environ.get('MIDDLEWARE')))
+
+ROOT_URLCONF = 'settings.urls'
 
 TEMPLATES = [
     {
@@ -63,7 +79,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+# WSGI_APPLICATION = 'settings.wsgi.application'
+# WSGI_APPLICATION = 'settings.wsgi.application'
 
 
 # Password validation
@@ -85,6 +102,28 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': str(os.environ.get('SQL_ENGINE')),
+        'NAME': str(os.environ.get('SQL_DATABASE')),
+        'USER': str(os.environ.get('SQL_USER')),
+        'PASSWORD': str(os.environ.get('SQL_PASSWORD')),
+        'HOST': str(os.environ.get('SQL_HOST')),
+        'PORT': str(os.environ.get('SQL_PORT')),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
+        'TEST': {
+            'CHARSET': 'utf8mb4',
+            'COLLATION': 'utf8mb4_unicode_ci',
+        }
+    }
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -104,8 +143,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/login/'
