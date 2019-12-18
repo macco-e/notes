@@ -24,13 +24,13 @@ Settings
 {% endblock content_title %}
 
 {% block content %}
-<div class="settings-container">
+<div class="settings-container flex-r">
 
-  <div class="settings-left">
+  <div class="settings-left sub-container">
 
     <div class="form-group">
       <form class="settings-form" action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-        <label for="iconFile">Icon</label>
+        <label>Icon</label>
         <img id="icon-preview" src="{{ user.icon_big.url }}" alt="icon">
         <input type="file" name="icon" onchange="preview_img(this);">
         <button type="submit" class="btn form-btn">Save</button>
@@ -51,11 +51,11 @@ Settings
 
   </div>
 
-  <div class="settings-right">
+  <div class="settings-right sub-container">
 
     <div class="form-group">
       <form class="settings-form" action="" method="POST">{% csrf_token %}
-        <label for="inputUserName">User name</label>
+        <label>User name</label>
         <input type="text" name="username" class="form-input" value="{{ user.get_username }}">
         <button type="submit" class="btn form-btn">Save</button>
       </form>
@@ -66,11 +66,11 @@ Settings
     <div class="form-group">
       <form class="settings-form" action="{% url 'notes:password_change' %}" method="POST">{% csrf_token %}
         {{ error }}
-        <label for="inputOldPassword">Old password</label>
+        <label>Old password</label>
         <input type="password" name="old_password" class="form-input" placeholder="Enter old password">
-        <label for="inputNewPassword1">New password</label>
+        <label>New password</label>
         <input type="password" name="new_password1" class="form-input" placeholder="Enter new password">
-        <label for="inputNewPassword2">New password(verify)</label>
+        <label>New password(verify)</label>
         <input type="password" name="new_password2" class="form-input" placeholder="Enter new password again">
         <button type="submit" class="btn form-btn">Change</button>
       </form>
@@ -81,9 +81,9 @@ Settings
     <div class="form-group delete-account">
       <form class="settings-form" action="{% url 'notes:delete_account' user.pk %}" method="POST">{% csrf_token %}
         {{ error }}
-        <label for="inputDeletePassword">Delete account</label>
+        <label>Delete account</label>
         <input type="password" name="delete-password" class="form-input" placeholder="Enter your password">
-        <button type="submit" class="btn delete-btn">delete</button>
+        <button type="submit" class="btn red">delete</button>
       </form>
     </div>
 
