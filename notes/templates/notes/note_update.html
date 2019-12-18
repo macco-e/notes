@@ -4,51 +4,36 @@
 
 <!--Head-->
 
-{% block css_link %}
-<link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
-{% endblock css_link %}
-
 {% block title %}
-@{{ target_user }}
+Edit
 {% endblock title %}
 
 
 <!--Body-->
 
-{% block board_title %}
+{% block content_title %}
 Edit
-{% endblock board_title %}
+{% endblock content_title %}
 
 
 {% block content %}
- <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
-  <div class="my-3 p-3 bg-white rounded shadow-sm">
-      <form action="" method="POST">
-          {% csrf_token %}
-          <div class="form-group">
-            <textarea name="text" class="form-control" id="form-markdown-textarea" rows="3"></textarea>
-          </div>
-          <input type="hidden" name="noted_user_id" value="{{ user.id }}">
-          <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-      <div id="alt-textarea">{{ note.text }}</div>
-      <script>
-        var textarea = document.getElementById("alt-textarea")
-        var content = textarea.innerHTML;
-        textarea.innerHTML = '';
+<div class="form-group">
+  <form action="" method="POST">
+    {% csrf_token %}
+    <textarea name="text" class="form-control" id="form-markdown-textarea"></textarea>
+    <input type="hidden" name="author" value="{{ user.id }}">
+    <button type="submit" class="btn">Save</button>
+  </form>
 
-        var simplemde = new SimpleMDE();
-        simplemde.value(content);
-      </script>
-  </div>
-  </div>
- </main>
+  <div id="alt-textarea">{{ note.text }}</div>
+  <script>
+    // 一度alt-textareaに描写されたものをmarkdownエリアに再描写
+    var textarea = document.getElementById("alt-textarea")
+    var content = textarea.innerHTML;
+    textarea.innerHTML = '';
 
+    var simplemde = new SimpleMDE();
+    simplemde.value(content);
+  </script>
+</div>
 {% endblock content %}
-
-{% block js %}
-<script>
-
-</script>
-{% endblock js %}
-

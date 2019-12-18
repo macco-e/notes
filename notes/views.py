@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.utils import IntegrityError
@@ -59,14 +59,19 @@ def logout_view(request):
 
 # Home--------------------------------------------------------------------------
 
-class HomeView(LoginRequiredMixin, ListView):
+class HomeView(ListView):
     template_name = 'notes/home.html'
     context_object_name = 'notes_list'
 
     def get_queryset(self):
-        user_id = self.request.user.id
-        follows = Follow.objects.filter(follow=user_id)
-        follow_list = [str(user_id)] + [str(f.follower.id) for f in follows]
+
+        if self.request.user.is_authenticated:
+            user_id = self.request.user.id
+            follows = Follow.objects.filter(follow=user_id)
+            follow_list = [str(user_id)] + [str(f.follower.id) for f in follows]
+        else:
+            follows = Follow.objects.all()
+            follow_list = [str(f.follower.id) for f in follows]
 
         if self.request.GET.get('q'):
             return Notes.objects.filter(
@@ -79,7 +84,7 @@ class HomeView(LoginRequiredMixin, ListView):
 
 # All notes---------------------------------------------------------------------
 
-class NotesView(LoginRequiredMixin, ListView):
+class NotesView(ListView):
     template_name = 'notes/all_notes.html'
     context_object_name = 'notes_list'
 
@@ -111,7 +116,7 @@ class NoteUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('notes:home')
 
 
-class NoteDetailView(LoginRequiredMixin, DetailView):
+class NoteDetailView(DetailView):
     model = Notes
     template_name = 'notes/note_detail.html'
     context_object_name = 'note'
@@ -125,7 +130,7 @@ def delete_note(request, pk):
 
 # Users ------------------------------------------------------------------------
 
-class UsersView(LoginRequiredMixin, ListView):
+class UsersView(ListView):
     template_name = 'notes/users.html'
     context_object_name = 'users_list'
 
@@ -139,7 +144,7 @@ class UsersView(LoginRequiredMixin, ListView):
 
 # User -------------------------------------------------------------------------
 
-class UserView(LoginRequiredMixin, ListView):
+class UserView(ListView):
     model = Notes
     template_name = 'notes/user.html'
 
@@ -154,8 +159,10 @@ class UserView(LoginRequiredMixin, ListView):
         context['num_follower'] = Follow.objects.filter(
             follower=target_user).count()
 
-        context['is_follow'] = bool(Follow.objects.filter(follow=login_user,
-                                                     follower=target_user).count())
+        if self.request.user.is_authenticated:
+            context['is_follow'] = bool(Follow.objects.filter(follow=login_user,
+                                                              follower=target_user).count())
+
         if self.request.GET.get('q'):
             search_word = self.request.GET['q']
             context['target_user_notes_list'] = Notes.objects.filter(
@@ -169,7 +176,7 @@ class UserView(LoginRequiredMixin, ListView):
 
 # Relation ---------------------------------------------------------------------
 
-class UserFollowView(LoginRequiredMixin, ListView):
+class UserFollowView(ListView):
     template_name = 'notes/user_relationship.html'
     context_object_name = 'accounts_list'
 
@@ -191,9 +198,9 @@ class UserFollowView(LoginRequiredMixin, ListView):
         return context
 
 
-class UserFollowerView(LoginRequiredMixin, ListView):
+class UserFollowerView(ListView):
     template_name = 'notes/user_relationship.html'
-    context_object_name = 'accounts_list'
+    context_object_name = 'users_list'
 
     def get_queryset(self):
         followers_obj = Follow.objects.filter(follower=self.kwargs['pk'])
@@ -234,3 +241,40 @@ class SettingsView(LoginRequiredMixin, UpdateView):
     template_name = 'notes/settings.html'
     fields = ['username', 'icon']
     success_url = reverse_lazy('notes:home')
+
+# iconの更新ができなくなっている
+
+
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        user = request.user
+        if user.check_password(request.POST['old_password']):
+            p1 = request.POST['new_password1']
+            p2 = request.POST['new_password2']
+
+            if p1 == p2:
+                user.set_password(p1)
+                user.save()
+                update_session_auth_hash(request, user)
+                return redirect('notes:settings', pk=user.pk)
+            else:
+                return render(request, 'notes/settings.html',
+                              {'error': 'p1 != p2'})
+        else:
+            return render(request, 'notes/settings.html',
+                          {'error': 'old password != raw password'})
+
+
+@login_required
+def delete_account(request, pk):
+    if request.method == 'POST':
+        account = Account.objects.get(pk=pk)
+        password = request.POST['delete-password']
+
+        if account.check_password(password):
+            account.delete()
+            return redirect('notes:home')
+        else:
+            return render(request, 'notes/settings.html',
+                          {'error': 'password is wrong'})

@@ -4,6 +4,7 @@ from django.urls import include, path
 from .views import sign_up_view, create_user, login_view, HomeView, logout_view, PostNoteView, SettingsView, follow, unfollow
 from .views import NoteDetailView, delete_note, NoteUpdateView, redirect_to_home
 from .views import NotesView, UsersView, UserView, UserFollowView, UserFollowerView
+from .views import password_change, delete_account
 
 app_name = 'notes'
 urlpatterns = [
@@ -33,4 +34,9 @@ urlpatterns = [
     path('note/<int:pk>', NoteDetailView.as_view(), name='note_detail'),
     path('note/edit/<int:pk>', NoteUpdateView.as_view(), name='note_update'),
     path('note/delete/<int:pk>', delete_note, name='note_delete'),
+
+    path('password_change/', password_change, name='password_change'),
+    path('delete_account/<int:pk>', delete_account, name='delete_account'),
+
+
 ]
