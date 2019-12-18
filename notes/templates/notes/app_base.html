@@ -1,141 +1,118 @@
 {% load static %}
 
 <!doctype html>
-<html lang="js">
+<html lang="ja">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-      {% block css_link %}
-      {% endblock css_link %}
+    <link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
 
     <!-- Markdown Editor - SimpleMDE   -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 
-    <link rel="stylesheet" href="{% static 'notes/dracula.css' %}">
-    <script src="{% static 'notes:highlight/pack.js' %}" ></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    <title>
-        {% block title %}
-        {% endblock title %}
-    </title>
+    <title>{% block title %}{% endblock title %}</title>
   </head>
+
   <body>
-      <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-          <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><span data-feather="lock"></span>{{ user.get_username }}</a>
+    <header class="header">
+      <div class="header-container">
+        <ul class="header__item-list">
+          <li class="header__service-name responsive-none">
+            <a href="{% url 'notes:home' %}" class="decoration-none">Notes</a>
+          </li>
+          <li>
+            <form class="header__search-form {% block show_search_form %}{% endblock show_search_form %}" action="" method="GET">
+              <input class="header__search-form-input" name="q" type="text" placeholder="{% block search_form_placeholder %}{% endblock search_form_placeholder %}">
+            </form>
+          </li>
+        </ul>
+        <ul class="header__item-list responsive-r-justify">
+          {% if user.id %}
+          <li><a href="{% url 'notes:user_page' user.pk %}"><img class="responsive-none" src="{{ user.icon_small.url }}" alt="icon"></a></li>
+          <li><a class="btn responsive-none" href="{% url 'notes:logout' %}">log out</a></li>
+          {% else %}
+          <li><a class="btn responsive-none" href="{% url 'notes:login' %}">Sign in</a></li>
+          <li><a class="btn responsive-none" href="{% url 'notes:signup' %}">Get started</a></li>
+          {% endif %}
+          <li class="responsive-true"><span data-feather="align-justify"></span></li>
+        </ul>
+      </div>
+    </header>
 
-          <form class="search_form w-100" action="{% block search_form %}{% endblock search_form %}" method="GET">
-            <input name="q" class="form-control form-control-dark w-100" type="text" placeholder="{% block search_form_placeholder %}{% endblock search_form_placeholder %}" aria-label="Search">
-          </form>
-          <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-              <a class="nav-link logout-btn" href="{% url 'notes:logout' %}">Logout</a>
-            </li>
-          </ul>
-      </nav>
+    <div class="container-main">
+      <div class="sidebar">
+        <ul class="sidebar__item-list">
+          <li class="sidebar__item">
+            <a class="sidebar__item-link {% block active_home %}{% endblock active_home %}"
+               href="{% url 'notes:home' %}">
+              <span data-feather="home"></span>
+              <span class="sidebar__item-description">Home</span>
+            </a>
+          </li>
+          <li class="sidebar__item">
+            <a class="sidebar__item-link {% block active_all_notes %}{% endblock active_all_notes %}"
+               href="{% url 'notes:notes' %}">
+              <span data-feather="book"></span>
+              <span class="sidebar__item-description">Notes</span>
+            </a>
+          </li>
+          <li class="sidebar__item">
+            <a class="sidebar__item-link {% block active_users %}{% endblock active_users %}"
+               href="{% url 'notes:users' %}">
+              <span data-feather="users"></span>
+              <span class="sidebar__item-description">Users</span>
+            </a>
+          </li>
+          {% if user.id %}
+          <li class="sidebar__item">
+            <a class="sidebar__item-link {% block active_mypage %}{% endblock active_mypage %}"
+               href="{% url 'notes:user_page' user.id %}">
+              <span data-feather="user"></span>
+              <span class="sidebar__item-description">My page</span>
+            </a>
+          </li>
+          <li class="sidebar__item">
+            <a class="sidebar__item-link {% block active_settings %}{% endblock active_settings %}"
+               href="{% url 'notes:settings' user.id %}">
+              <span data-feather="settings"></span>
+              <span class="sidebar__item-description">Settings</span>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
 
-    <div class="container-fluid">
-      <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-
-              <li class="nav-item">
-                <a class="nav-link {% block active_home %}{% endblock active_home %}" href="{% url 'notes:home' %}">
-                  <span data-feather="home"></span>
-                    <p class>Home</p>
-                </a>
-              </li>
-
-
-              <li class="nav-item">
-                <a class="nav-link {% block active_all_notes %}{% endblock active_all_notes %}" href="{% url 'notes:notes' %}">
-                  <span data-feather="book"></span>
-                    <p>All notes</p>
-                </a>
-              </li>
-
-
-              <li class="nav-item">
-                <a class="nav-link {% block active_users %}{% endblock active_users %}" href="{% url 'notes:users' %}">
-                  <span data-feather="users"></span>
-                    <p>Users</p>
-                </a>
-
-              </li>
-
-
-              <li class="nav-item">
-                <a class="nav-link {% block active_mypage %}{% endblock active_mypage %}" href="{% url 'notes:user_page' user.id %}">
-                  <span data-feather="user"></span>
-                    <p>My page</p>
-                </a>
-
-              </li>
-
-
-              <li class="nav-item">
-                <a class="nav-link {% block active_settings %}{% endblock active_settings %}" href="{% url 'notes:settings' user.id %}">
-                  <span data-feather="settings"></span>
-                     <p>settings</p>
-                </a>
-              </li>
-
-
-            </ul>
+      <div class="content-wrapper">
+        <div class="content">
+          <div class="{% block hide-hr %}{% endblock hide-hr %}">
+            <h1 class="content__title">{% block content_title %}{% endblock content_title %}</h1>
+            <hr>
           </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-            <div class="container">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">{% block board_title %}{% endblock board_title %}</h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-            </div>
-          </div>
-
+          {% block content_header %}{% endblock content_header %}
+          {% block content %}{% endblock content %}
+          {% if user.id %}
           <div class="edit-btn">
-             <a class="" href="{% url 'notes:post_note' %}">
-               <span data-feather="edit"></span>
-             </a>
+            <a href="{% url 'notes:post_note' %}">
+              <span class="fa" data-feather="edit"></span>
+            </a>
           </div>
-            </div>
-        </main>
-
+          {% endif %}
+        </div>
       </div>
     </div>
 
-    {% block content %}
-    {% endblock content %}
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-    <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <!-- Feather icon - https://feathericons.com/ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
     <script src="{% static 'notes/app_base.js' %}"></script>
-    {% block js %}
-    {% endblock js %}
 
-<script type="text/javascript">
-        function preview_img(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#icon-preview').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-    </script>
+    <!-- Markdown Highlighter - highlightjs   -->
+    <link rel="stylesheet"
+        href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/dracula.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
   </body>
 </html>

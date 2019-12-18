@@ -4,45 +4,91 @@
 
 <!--Head-->
 
-{% block css_link %}
-<link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
-{% endblock css_link %}
-
 {% block title %}
 Settings
 {% endblock title %}
 
 {% block active_settings %}
-    active
+active
 {% endblock active_settings %}
+
+{% block show_search_form %}
+show-none
+{% endblock show_search_form %}
 
 
 <!--Body-->
 
-{% block board_title %}
-Settings @{{ user.get_username }}
-{% endblock board_title %}
-
+{% block content_title %}
+Settings
+{% endblock content_title %}
 
 {% block content %}
- <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
-  <div class="my-3 p-3 bg-white rounded shadow-sm">
-    <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-      <div class="form-group">
-        <label for="inputUserName">User name</label>
-        <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter new user name" value="{{ user.get_username }}">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-      </div>
-      <div class="form-group">
+<div class="settings-container">
+
+  <div class="settings-left">
+
+    <div class="form-group">
+      <form class="settings-form" action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <label for="iconFile">Icon</label>
-          <p><img id="icon-preview" src="{{ user.icon_big.url }}" alt="N"></p>
-          <p><input type="file" name="icon" onchange="preview_img(this)"></p>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+        <img id="icon-preview" src="{{ user.icon_big.url }}" alt="icon">
+        <input type="file" name="icon" onchange="preview_img(this);">
+        <button type="submit" class="btn form-btn">Save</button>
+      </form>
+      <script type="text/javascript">
+        function preview_img(input) {
+          if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              el = document.getElementById('icon-preview');
+              el.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+          }
+        }
+      </script>
+    </div>
+
   </div>
- </main>
 
+  <div class="settings-right">
 
+    <div class="form-group">
+      <form class="settings-form" action="" method="POST">{% csrf_token %}
+        <label for="inputUserName">User name</label>
+        <input type="text" name="username" class="form-input" value="{{ user.get_username }}">
+        <button type="submit" class="btn form-btn">Save</button>
+      </form>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+      <form class="settings-form" action="{% url 'notes:password_change' %}" method="POST">{% csrf_token %}
+        {{ error }}
+        <label for="inputOldPassword">Old password</label>
+        <input type="password" name="old_password" class="form-input" placeholder="Enter old password">
+        <label for="inputNewPassword1">New password</label>
+        <input type="password" name="new_password1" class="form-input" placeholder="Enter new password">
+        <label for="inputNewPassword2">New password(verify)</label>
+        <input type="password" name="new_password2" class="form-input" placeholder="Enter new password again">
+        <button type="submit" class="btn form-btn">Change</button>
+      </form>
+    </div>
+
+    <hr>
+
+    <div class="form-group delete-account">
+      <form class="settings-form" action="{% url 'notes:delete_account' user.pk %}" method="POST">{% csrf_token %}
+        {{ error }}
+        <label for="inputDeletePassword">Delete account</label>
+        <input type="password" name="delete-password" class="form-input" placeholder="Enter your password">
+        <button type="submit" class="btn delete-btn">delete</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<hr>
 {% endblock content %}

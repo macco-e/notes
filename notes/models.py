@@ -50,8 +50,14 @@ class Notes(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+    def get_markdown(self):
+        return markdown(self.text)
+
     def get_text_as_markdown(self):
-        return mark_safe(markdown(self.text, safe_mode='escape'))
+        # fenced_code - ```code```
+        # nl2br - new line to break
+        # https://python-markdown.github.io/reference/
+        return mark_safe(markdown(self.text, extensions=['fenced_code', 'attr_list', 'nl2br'], safe_mode='escape'))
 
     def get_format_created_at(self):
         return self.created_at.strftime("%Y-%m-%d %H:%M:%S")

@@ -4,82 +4,85 @@
 
 <!--Head-->
 
-{% block css_link %}
-    <link rel="stylesheet" href="{% static 'notes/app_base.css' %}">
-{% endblock css_link %}
-
 {% block title %}
-    @{{ target_user }}
+  @{{ target_user }}
 {% endblock title %}
 
-
-{% block search_form %}
-    {% url 'notes:user_page' target_user.pk %}
-{% endblock search_form %}
-
 {% block search_form_placeholder %}
-    Search notes
+  Search notes
 {% endblock search_form_placeholder %}
 
 
+{% block active_mypage %}
+  {% if user.id == target_user.pk %}
+  active
+  {% endif %}
+{% endblock active_mypage %}
 
 {% block active_users %}
-    active
+  {% if user.id != target_user.pk %}
+  active
+  {% endif %}
 {% endblock active_users %}
+
+{% block hide-hr %}
+show-none
+{% endblock hide-hr %}
 
 
 <!--Body-->
 
-{% block board_title %}
-<img src="{{ target_user.icon_big.url }}" alt="N">
-<span class="target-username">@ {{ target_user }}</span>
+{% block content_header %}
+<div class="user-header">
+  <img class="user-icon" src="{{ target_user.icon_big.url }}" alt="N">
 
-{% if user.id != self_pk %}
-    {% if is_follow %}
-        <a href="{% url 'notes:unfollow' target_user.pk %}" class="btn btn-danger btn" role="button" aria-pressed="true">unfollow</a>
-    {% else %}
-        <a href="{% url 'notes:follow' target_user.pk %}" class="btn btn-primary btn" role="button" aria-pressed="true">follow</a>
-    {% endif %}
-{% endif %}
+  <div class="user-header__info">
+    <div class="user-header__info__username">
+      @ {{ target_user }}
 
-<a href="{% url 'notes:user_follow_list' target_user.pk %}">
-<button type="button" class="btn btn-success">
-    Follow <span class="badge badge-light">{{ num_follow }}</span>
-</button>
-</a>
+      {% if user.id %}
+        {% if user.id != target_user.pk %}
+          {% if is_follow %}
+          <a href="{% url 'notes:unfollow' target_user.pk %}" class="btn relationBtn unfollowBtn">unfollow</a>
+          {% else %}
+          <a href="{% url 'notes:follow' target_user.pk %}" class="btn relationBtn followBtn">follow</a>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
 
-<a href="{% url 'notes:user_follower_list' target_user.pk %}">
-<button type="button" class="btn btn-success">
-  Follower <span class="badge badge-light">{{ num_follower }}</span>
-</button>
-</a>
+    <div class="user-header__info__relation">
+      <a class="relation-text" href="{% url 'notes:user_follow_list' target_user.pk %}"><b>{{ num_follow }}</b> Follow</a>
+      <a class="relation-text" href="{% url 'notes:user_follower_list' target_user.pk %}"><b>{{ num_follower }}</b> Follower</a>
+    </div>
 
-{% endblock board_title %}
+
+  </div>
+</div>
+<hr>
+{% endblock content_header %}
 
 
 {% block content %}
- <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 maincontent">
-  <div class="my-3 p-3 bg-white rounded shadow-sm">
-    <h6 class="border-bottom border-gray pb-2 mb-0">Recent notes</h6>
-      {% for note in target_user_notes_list %}
-        <div class="media text-muted pt-3">
-            <a href="{% url 'notes:user_page' target_user.pk %}">
-                <img src="{{ note.author.icon_small.url }}" alt="N">
-            </a>
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark">
-                <a href="{% url 'notes:user_page' target_user.pk %}">@{{ note.author }}</a> Posted at: {{ note.get_format_created_at }}
-            </strong>
-          </p>
-        </div>
+<div>
+  {% for note in target_user_notes_list %}
+  <div class="note-content">
+    <div class="note-content__icon">
+      <a href="{% url 'notes:user_page' note.author.id %}">
+        <img class="user-icon" src="{{ note.author.icon_small.url }}" alt="N">
+      </a>
+    </div>
 
-      <div style="margin:0 30px;" onclick="location.href='{% url 'notes:note_detail' note.id %}'">
-            {{ note.get_text_as_markdown }}
-        </div>
-      {% endfor %}
-    <small class="d-block text-right mt-3">
-      <a href="#">All updates</a>
-    </small>
+    <div class="note-content__content">
+      <p class="note-content__content-author"><a
+              href="{% url 'notes:user_page' note.author.id %}">@{{ note.author }}</a> {{ note.get_format_created_at }}</p>
+      <div style="margin:0 30px;"
+           onclick="location.href='{% url 'notes:note_detail' note.id %}'">
+        {{ note.get_text_as_markdown }}
+      </div>
+    </div>
   </div>
- </main>
+  <hr>
+  {% endfor %}
+</div>
 {% endblock content %}
