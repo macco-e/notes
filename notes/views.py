@@ -97,7 +97,7 @@ class NotesView(ListView):
             return Notes.objects.all().order_by('-created_at')
 
 
-# Note  ------------------------------------------------------------------
+# Note  ------------------------------------------------------------------------
 
 class PostNoteView(LoginRequiredMixin, CreateView):
     model = Notes
@@ -178,7 +178,7 @@ class UserView(ListView):
 
 class UserFollowView(ListView):
     template_name = 'notes/user_relationship.html'
-    context_object_name = 'accounts_list'
+    context_object_name = 'users_list'
 
     def get_queryset(self):
         follows_obj = Follow.objects.filter(follow=self.kwargs['pk'])
@@ -243,7 +243,6 @@ class SettingsView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('notes:home')
 
 # iconの更新ができなくなっている
-
 
 @login_required
 def password_change(request):

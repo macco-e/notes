@@ -33,19 +33,19 @@ show-none
 <!--Body-->
 
 {% block content_header %}
-<div class="user-header">
+<div class="user-header flex-r">
   <img class="user-icon" src="{{ target_user.icon_big.url }}" alt="N">
 
-  <div class="user-header__info">
-    <div class="user-header__info__username">
+  <div class="user-header__info flex-c">
+    <div class="user-header__info__username flex-r">
       @ {{ target_user }}
 
       {% if user.id %}
         {% if user.id != target_user.pk %}
           {% if is_follow %}
-          <a href="{% url 'notes:unfollow' target_user.pk %}" class="btn relationBtn unfollowBtn">unfollow</a>
+          <a href="{% url 'notes:unfollow' target_user.pk %}" class="btn relationBtn red">unfollow</a>
           {% else %}
-          <a href="{% url 'notes:follow' target_user.pk %}" class="btn relationBtn followBtn">follow</a>
+          <a href="{% url 'notes:follow' target_user.pk %}" class="btn relationBtn blue">follow</a>
           {% endif %}
         {% endif %}
       {% endif %}

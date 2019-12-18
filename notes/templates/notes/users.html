@@ -29,7 +29,7 @@ Users
   {% for each_user in users_list %}
   <div class="user-list">
 
-    <div class="user-list__image">
+    <div>
       <a href="{% url 'notes:user_page' each_user.pk %}">
         <img class="user-icon" src="{{ each_user.icon_middle.url }}" alt="No images">
       </a>

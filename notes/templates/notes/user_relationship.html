@@ -1,22 +1,20 @@
 {% extends 'notes/app_base.html' %}
 {% load static %}
 
+
 <!--Head-->
 
 {% block title %}
   Home
 {% endblock title %}
 
+{% block search_form_placeholder %}
+Search user
+{% endblock search_form_placeholder %}
 
-<!--Nav bar-->
-
-{% block top_username %}
-{{ user.get_username }}
-{% endblock top_username %}
-
-{% block logout_link %}
-{% url 'notes:logout' %}
-{% endblock logout_link %}
+{% block active_users %}
+active
+{% endblock active_users %}
 
 
 <!--Body-->
@@ -31,9 +29,9 @@
   {% for each_user in users_list %}
   <div class="user-list">
 
-    <div class="user-list__image">
+    <div>
       <a href="{% url 'notes:user_page' each_user.pk %}">
-        <img src="{{ each_user.icon_middle.url }}" alt="No images">
+        <img class="user-icon" src="{{ each_user.icon_middle.url }}" alt="No images">
       </a>
     </div>
 
