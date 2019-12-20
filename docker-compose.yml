@@ -1,17 +1,30 @@
 version: "3.7"
 
 services:
+  nginx:
+    image: nginx
+    restart: always
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/
+      - /static:/static
+      - ./media:/media
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
   web:
     build:
       context: .
-      dockerfile: Dockerfile
-    command: bash -c "sh entrypoint.prod.sh && python manage.py runserver 0.0.0.0:8000"
+      dockerfile: Dockerfile.prod
+    command: bash -c "sh entrypoint.prod.sh && gunicorn --bind 0.0.0.0:8000 settings.wsgi:application"
     volumes:
-      - .:/notes_project
-    ports:
-      - "8000:8000"
+      - /static:/static
+      - ./media:/media
+    expose:
+      - 8000
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     depends_on:
       - mysql
 

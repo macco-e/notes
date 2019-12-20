@@ -2,7 +2,9 @@
 
 # Waiting for mysql
 echo "Waiting for mysql..."
-sleep 5
+sleep 10
 
-# setup db
+# setup MySQL
+python manage.py makemigrations
 python manage.py migrate
+python manage.py collectstatic --no-input --clear
