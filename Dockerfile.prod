@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3
+FROM python:3.6
 
 # set environmet variables
 ENV PYTHONUNBUFFERED 1
@@ -16,13 +16,7 @@ RUN pip install -r requirements.txt
 COPY . /notes_project/
 
 # create the static directories
-WORKDIR /
-RUN mkdir /app
-RUN mkdir /app/static
-RUN mkdir /app/media
-
-# copy media default image
-COPY ./media /app/media
+WORKDIR /notes_project
 
 # cd project directory
 WORKDIR /notes_project

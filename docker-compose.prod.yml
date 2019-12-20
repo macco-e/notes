@@ -6,8 +6,8 @@ services:
     restart: always
     volumes:
       - ./nginx/:/etc/nginx/conf.d/
-      - static_volume:/app/static
-      - media_volume:/app/media
+      - /static:/static
+      - ./media:/media
     ports:
       - "80:80"
     depends_on:
@@ -17,10 +17,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    command: bash -c "sh entrypoint.sh && gunicorn --bind 0.0.0.0:8000 settings.wsgi:application"
+    command: bash -c "sh entrypoint.prod.sh && gunicorn --bind 0.0.0.0:8000 settings.wsgi:application"
     volumes:
-      - static_volume:/app/static
-      - media_volume:/app/media
+      - /static:/static
+      - ./media:/media
     expose:
       - 8000
     env_file:
@@ -39,5 +39,3 @@ services:
 
 volumes:
   dbdata_volume:
-  media_volume:
-  static_volume:
