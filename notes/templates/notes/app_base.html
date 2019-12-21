@@ -18,9 +18,9 @@
   <body>
     <header class="header flex-c">
       <div class="header-container flex-r">
-        <ul class="header__item-list list-none flex-r">
+        <ul class="header__item-list flex-r">
           <li class="header__service-name responsive-none">
-            <a href="{% url 'notes:home' %}" class="decoration-none">Notes</a>
+            <a href="{% url 'notes:home' %}" class="decoration-none">GNotes</a>
           </li>
           <li>
             <form class="header__search-form {% block show_search_form %}{% endblock show_search_form %}" action="" method="GET">
@@ -28,13 +28,13 @@
             </form>
           </li>
         </ul>
-        <ul class="header__item-list list-none flex-r responsive-r-justify">
+        <ul class="header__item-list flex-r responsive-r-justify">
           {% if user.id %}
           <li><a href="{% url 'notes:user_page' user.pk %}"><img class="responsive-none" src="{{ user.icon_small.url }}" alt="icon"></a></li>
           <li><a class="btn responsive-none" href="{% url 'notes:logout' %}">log out</a></li>
           {% else %}
           <li><a class="btn responsive-none" href="{% url 'notes:login' %}">Sign in</a></li>
-          <li><a class="btn responsive-none" href="{% url 'notes:signup' %}">Get started</a></li>
+          <li><a class="btn responsive-none" href="{% url 'notes:signup' %}">Sign up</a></li>
           {% endif %}
           <li class="responsive-true"><span data-feather="align-justify"></span></li>
         </ul>
