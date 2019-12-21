@@ -17,7 +17,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     command: bash -c "sh entrypoint.prod.sh && gunicorn --bind 0.0.0.0:8000 settings.wsgi:application"
     volumes:
       - /static:/static
@@ -34,7 +34,7 @@ services:
     expose:
       - 3306
     env_file:
-      - ./.env.prod.db
+      - ./.env.db
     volumes:
       - dbdata_volume:/var/lib/mysql
 

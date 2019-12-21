@@ -65,7 +65,6 @@ Icon
 
 # Distribution / packaging
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -110,7 +109,7 @@ coverage.xml
 .python-version
 
 # dotenv
-.env
+
 
 # virtualenv
 .venv
