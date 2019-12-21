@@ -1,5 +1,10 @@
-body {
+* {
   margin: 0;
+  padding: 0;
+}
+
+
+body {
   font-size: .875rem;
   min-height: 100vh;
   display: flex;
@@ -68,10 +73,9 @@ utility -------------------------------------------------------
  color: green;
 }
 
-.responsive-true {
+.r-visible {
   display: none;
-  color: white;
- }
+}
 
 .decoration-none {
  text-decoration: none;
@@ -129,15 +133,6 @@ header -------------------------------------------------------
 }
 
 /*
-main -------------------------------------------------------
-*/
-
-.container-main {
- height: 100vh;
- overflow-y: scroll;
-}
-
-/*
 sidebar -------------------------------------------------------
 */
 
@@ -151,10 +146,6 @@ sidebar -------------------------------------------------------
  top: 60px;
 
  align-items: center;
-}
-
-.sidebar__item-list {
- padding: 0;
 }
 
 .sidebar__item {
@@ -195,9 +186,20 @@ content -------------------------------------------------------
 .content {
  width: 100%;
  max-width: 1000px;
- padding: 0;
- padding-top: 5px;
  background-color: white;
+}
+
+.content__title-container {
+ background-color: white;
+
+ width: 100%;
+ height: 60px;
+
+ display: flex;
+ flex-direction: row;
+
+ justify-content: space-between;
+ align-items: center;
 }
 
 .content__title {
@@ -216,12 +218,13 @@ Note -------------------------------------------------------
 
 .note-content {
  width: 100%;
+ padding: 5px 0;
  display: flex;
  flex-direction: row;
 }
 
 .note-content__content-author {
- margin: 0;
+ padding: 3px 0;
  font-size: 0.6rem;
  text-decoration: none;
 }
@@ -337,6 +340,14 @@ responsive -------------------------------------------------------
 
 @media (max-width: 620px) {
 
+ .r-hidden {
+  display: none;
+ }
+
+ .r-visible {
+  display: block;
+ }
+
  body {
   display: flex;
   flex-direction: column;
@@ -363,10 +374,17 @@ responsive -------------------------------------------------------
  .content-container {
   display: flex;
   flex-direction: column-reverse !important;
-  justify-content: space-between;
-  overflow-y: scroll;
-
   padding-bottom: 60px; /*sidebarのfix分*/
+ }
+
+ .content__title-container {
+  position: sticky;
+  top: 0px;
+ }
+
+ .r-nav-icon {
+  padding-right: 10px;
+  color: rgba(129, 129, 129)
  }
 
  .sidebar {
@@ -407,19 +425,10 @@ responsive -------------------------------------------------------
   margin-right: 8px;
  }
 
- .responsive-none {
-  display: none;
- }
-
- .responsive-true {
-  display: block;
- }
-
  .edit-btn {
   right: 40px;
   bottom: 80px;
  }
-
 
  .responsive-r-justify {
   justify-content: flex-end;
@@ -437,6 +446,7 @@ responsive -------------------------------------------------------
  .form-group {
   margin: 5px 0;
  }
+
 }
 
 @media (max-width: 1000px) {

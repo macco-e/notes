@@ -16,10 +16,10 @@
   </head>
 
   <body>
-    <header class="header flex-c">
+    <header class="header flex-c r-hidden">
       <div class="header-container flex-r">
         <ul class="header__item-list flex-r">
-          <li class="header__service-name responsive-none">
+          <li class="header__service-name r-hidden">
             <a href="{% url 'notes:home' %}" class="decoration-none">GNotes</a>
           </li>
           <li>
@@ -30,13 +30,13 @@
         </ul>
         <ul class="header__item-list flex-r responsive-r-justify">
           {% if user.id %}
-          <li><a href="{% url 'notes:user_page' user.pk %}"><img class="responsive-none" src="{{ user.icon_small.url }}" alt="icon"></a></li>
-          <li><a class="btn responsive-none" href="{% url 'notes:logout' %}">log out</a></li>
+          <li><a href="{% url 'notes:user_page' user.pk %}"><img class="r-hidden" src="{{ user.icon_small.url }}" alt="icon"></a></li>
+          <li><a class="btn r-hidden" href="{% url 'notes:logout' %}">log out</a></li>
           {% else %}
-          <li><a class="btn responsive-none" href="{% url 'notes:login' %}">Sign in</a></li>
-          <li><a class="btn responsive-none" href="{% url 'notes:signup' %}">Sign up</a></li>
+          <li><a class="btn r-hidden" href="{% url 'notes:login' %}">Sign in</a></li>
+          <li><a class="btn r-hidden" href="{% url 'notes:signup' %}">Sign up</a></li>
           {% endif %}
-          <li class="responsive-true"><span data-feather="align-justify"></span></li>
+
         </ul>
       </div>
     </header>
@@ -86,10 +86,26 @@
 
       <div class="content-wrapper">
         <div class="content">
-          <div class="{% block hide-hr %}{% endblock hide-hr %}">
+
+
+
+
+          <div class="content__title-container {% block hide-hr %}{% endblock hide-hr %}">
             <h1 class="content__title">{% block content_title %}{% endblock content_title %}</h1>
-            <hr>
+
+            <div class="r-nav r-visible flex-r">
+              <a class="r-nav-icon"><span data-feather="search"></span></a>
+              <a class="r-nav-icon"><span data-feather="align-justify"></span></a>
+            </div>
           </div>
+
+
+
+
+
+
+
+          <hr>
           {% block content_header %}{% endblock content_header %}
           {% block content %}{% endblock content %}
 
