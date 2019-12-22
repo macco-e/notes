@@ -10,6 +10,8 @@ body {
   display: flex;
   flex-direction: column;
 
+  font-family: "ヒラギノ角ゴ ProN";
+
   background-color: rgba(244, 244, 244);
 }
 
@@ -169,7 +171,7 @@ sidebar -------------------------------------------------------
 
 pre > code {
   font-size: 0.8rem;
-  font-family: "Sans Mono", "Consolas", "Courier", monospace;
+  font-family: "ヒラギノ角ゴ ProN", "Sans Mono", "Consolas", "Courier", monospace;
 }
 
 
@@ -231,6 +233,10 @@ Note -------------------------------------------------------
 
 .note-content__content-author a {
  color: blue;
+}
+
+.note-content__content-area {
+ margin: 0 30px;
 }
 
 /*
@@ -352,7 +358,6 @@ responsive -------------------------------------------------------
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-size: 0.7rem;
  }
 
  h1 {
@@ -462,7 +467,7 @@ responsive -------------------------------------------------------
   top: 0;
   right: 0;
   z-index: 9999;/*最前面に*/
-  width: 50%;/*右側に隙間を作る（閉じるカバーを表示）*/
+  width: 70%;/*右側に隙間を作る（閉じるカバーを表示）*/
   max-width: 330px;/*最大幅（調整してください）*/
   height: 100%;
   background: rgba(39, 39, 39);/*背景色*/
@@ -483,7 +488,8 @@ responsive -------------------------------------------------------
 #r-nav-input:checked ~ .r-nav-menu-content {
   -webkit-transform: translateX(0%);
   transform: translateX(0%);/*中身を表示（右へスライド）*/
-  box-shadow: 6px 0 25px rgba(0,0,0,.15);
+  box-shadow: -8px 0 8px 0 rgba(0,0,0,.15);
+  z-index: 9999;/*最前面に*/
 }
 
 
@@ -555,15 +561,16 @@ navigation-drawer
   height: 30px;
  }
 
- .feather-lock {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
+ .edit-btn {
+  right: 20px;
+  bottom: 80px;
+
+  z-index: 10;
  }
 
- .edit-btn {
-  right: 40px;
-  bottom: 80px;
+ .edit-feather {
+  width: 50px;
+  height: 50px;
  }
 
  .responsive-r-justify {
@@ -581,6 +588,10 @@ navigation-drawer
 
  .form-group {
   margin: 5px 0;
+ }
+
+ .note-content__content-area {
+   margin: 0 15px 0 5px;
  }
 
 }

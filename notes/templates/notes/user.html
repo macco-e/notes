@@ -76,7 +76,7 @@ show-none
     <div class="note-content__content">
       <p class="note-content__content-author"><a
               href="{% url 'notes:user_page' note.author.id %}">@{{ note.author }}</a> {{ note.get_format_created_at }}</p>
-      <div style="margin:0 30px;"
+      <div class="note-content__content-area"
            onclick="location.href='{% url 'notes:note_detail' note.id %}'">
         {{ note.get_text_as_markdown }}
       </div>
