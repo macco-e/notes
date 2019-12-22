@@ -86,25 +86,64 @@
 
       <div class="content-wrapper">
         <div class="content">
-
-
-
-
-          <div class="content__title-container {% block hide-hr %}{% endblock hide-hr %}">
+          <div class="content__title-container flex-r {% block hide-hr %}{% endblock hide-hr %}">
             <h1 class="content__title">{% block content_title %}{% endblock content_title %}</h1>
 
-            <div class="r-nav r-visible flex-r">
-              <a class="r-nav-icon"><span data-feather="search"></span></a>
-              <a class="r-nav-icon"><span data-feather="align-justify"></span></a>
+
+
+
+
+
+
+
+
+
+
+
+
+            <div class="r-nav r-visible">
+
+              <div class="r-nav-search-wrap">
+                <form action="" method="GET">{% csrf_token %}
+                  <input class="r-nav-search-form" type="text" name="q" placeholder="search...">
+                  <a class="r-nav-icon r-nav-search-form-submit"><span data-feather="search"></span></a>
+                </form>
+              </div>
+
+
+              <div class="r-nav-menu">
+                <input id="r-nav-input" type="checkbox" class="r-nav-hidden">
+                <label class="r-nav-open" for="r-nav-input"><span class="r-nav-icon" data-feather="menu"></span></label>
+                <label class="r-nav-close r-nav-hidden" for="r-nav-input"></label>
+                <div class="r-nav-menu-content flex-c">
+
+                  <div class="drawer-user-container">
+                    {% if user.id %}
+                    <img id="icon-preview" src="{{ user.icon_big.url }}" alt="icon">
+                    <p>@{{ user.get_username }}</p>
+                    {% else %}
+                    <img id="icon-preview" src="/media/icons/default.png" alt="icon">
+                    <p>Guest</p>
+                    {% endif %}
+                  </div>
+
+                  {% if user.id %}
+                  <a class="drawer-item deco-none" href="{% url 'notes:logout' %}">
+                    <span class="drawer-icon" data-feather="log-out"></span>Log out
+                  </a>
+                  {% else %}
+                  <a class="drawer-item deco-none" href="{% url 'notes:login' %}">
+                    <span class="drawer-icon" data-feather="log-in"></span>Sign in
+                  </a>
+                  <a class="drawer-item deco-none" href="{% url 'notes:signup' %}">
+                    <span class="drawer-icon" data-feather="edit-3"></span>Sign up
+                  </a>
+                  {% endif %}
+
+                </div>
+              </div>
             </div>
           </div>
-
-
-
-
-
-
-
           <hr>
           {% block content_header %}{% endblock content_header %}
           {% block content %}{% endblock content %}
