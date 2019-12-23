@@ -86,7 +86,7 @@
 
       <div class="content-wrapper">
         <div class="content">
-          <div class="content__title-container flex-r {% block hide-hr %}{% endblock hide-hr %}">
+          <div class="content__title-container flex-r {% block hidden %}{% endblock hidden %}">
             <h1 class="content__title">{% block content_title %}{% endblock content_title %}</h1>
 
             <div class="r-nav r-visible">
@@ -132,7 +132,6 @@
               </div>
             </div>
           </div>
-          <hr>
           {% block content_header %}{% endblock content_header %}
           {% block content %}{% endblock content %}
 

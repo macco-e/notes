@@ -24,12 +24,13 @@ Note
 {% block content %}
 <div>
   {% if user.id == note.author.id %}
-  <div style="text-align: right;">
-    <a href="{% url 'notes:note_update' note.id %}" class="btn btn-success"
+  <div class="note-detail__btn-area" style="text-align: right;">
+    <a href="{% url 'notes:note_update' note.id %}" class="btn"
        role="button" aria-pressed="true">Edit</a>
-    <a href="{% url 'notes:note_delete' note.id %}" class="btn btn-danger"
+    <a href="{% url 'notes:note_delete' note.id %}" class="btn red"
        role="button" aria-pressed="true">Delete</a>
   </div>
+  <hr>
   {% endif %}
 
   <div class="note-content">
