@@ -136,7 +136,7 @@
           {% block content %}{% endblock content %}
 
           {% if user.id %}
-          <div class="edit-btn">
+          <div class="edit-btn {% block edit-btn-hidden %}{% endblock edit-btn-hidden %}">
             <a class="deco-none blue" href="{% url 'notes:post_note' %}">
               <span class="fa edit-feather" data-feather="edit"></span>
             </a>

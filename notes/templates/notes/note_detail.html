@@ -21,6 +21,10 @@ active
 Note
 {% endblock content_title %}
 
+{% block edit-btn-hidden %}
+hidden
+{% endblock edit-btn-hidden %}
+
 {% block content %}
 <div>
   {% if user.id == note.author.id %}
