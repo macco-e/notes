@@ -242,7 +242,6 @@ class SettingsView(LoginRequiredMixin, UpdateView):
     fields = ['username', 'icon']
     success_url = reverse_lazy('notes:home')
 
-# iconの更新ができなくなっている
 
 @login_required
 def password_change(request):
