@@ -23,6 +23,10 @@ active
 Users
 {% endblock content_title %}
 
+{% block edit-btn-hidden %}
+hidden
+{% endblock edit-btn-hidden %}
+
 {% block content %}
 <div>
 
@@ -31,12 +35,12 @@ Users
 
     <div>
       <a href="{% url 'notes:user_page' each_user.pk %}">
-        <img class="user-icon" src="{{ each_user.icon_middle.url }}" alt="No images">
+        <img class="user-icon" src="{{ each_user.icon_small.url }}" alt="No images">
       </a>
     </div>
 
     <div class="user-list__name">
-      <p><a href="{% url 'notes:user_page' each_user.pk %}">@{{ each_user.username }}</a></p>
+      <a href="{% url 'notes:user_page' each_user.pk %}">@{{ each_user.username }}</a>
     </div>
 
   </div>

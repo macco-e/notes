@@ -16,11 +16,11 @@
   </head>
 
   <body>
-    <header class="header flex-c">
+    <header class="header flex-c r-hidden">
       <div class="header-container flex-r">
-        <ul class="header__item-list list-none flex-r">
-          <li class="header__service-name responsive-none">
-            <a href="{% url 'notes:home' %}" class="decoration-none">Notes</a>
+        <ul class="header__item-list flex-r">
+          <li class="header__service-name r-hidden">
+            <a href="{% url 'notes:home' %}" class="decoration-none">GNotes</a>
           </li>
           <li>
             <form class="header__search-form {% block show_search_form %}{% endblock show_search_form %}" action="" method="GET">
@@ -28,15 +28,15 @@
             </form>
           </li>
         </ul>
-        <ul class="header__item-list list-none flex-r responsive-r-justify">
+        <ul class="header__item-list flex-r responsive-r-justify">
           {% if user.id %}
-          <li><a href="{% url 'notes:user_page' user.pk %}"><img class="responsive-none" src="{{ user.icon_small.url }}" alt="icon"></a></li>
-          <li><a class="btn responsive-none" href="{% url 'notes:logout' %}">log out</a></li>
+          <li><a href="{% url 'notes:user_page' user.pk %}"><img class="r-hidden" src="{{ user.icon_small.url }}" alt="icon"></a></li>
+          <li><a class="btn r-hidden" href="{% url 'notes:logout' %}">log out</a></li>
           {% else %}
-          <li><a class="btn responsive-none" href="{% url 'notes:login' %}">Sign in</a></li>
-          <li><a class="btn responsive-none" href="{% url 'notes:signup' %}">Get started</a></li>
+          <li><a class="btn r-hidden" href="{% url 'notes:login' %}">Sign in</a></li>
+          <li><a class="btn r-hidden" href="{% url 'notes:signup' %}">Sign up</a></li>
           {% endif %}
-          <li class="responsive-true"><span data-feather="align-justify"></span></li>
+
         </ul>
       </div>
     </header>
@@ -86,17 +86,59 @@
 
       <div class="content-wrapper">
         <div class="content">
-          <div class="{% block hide-hr %}{% endblock hide-hr %}">
+          <div class="content__title-container flex-r {% block hidden %}{% endblock hidden %}">
             <h1 class="content__title">{% block content_title %}{% endblock content_title %}</h1>
-            <hr>
+
+            <div class="r-nav r-visible">
+
+              <div class="r-nav-search-wrap">
+                <form action="" method="GET">{% csrf_token %}
+                  <input class="r-nav-search-form" type="text" name="q" placeholder="search...">
+                  <a class="r-nav-icon r-nav-search-form-submit"><span data-feather="search"></span></a>
+                </form>
+              </div>
+
+
+              <div class="r-nav-menu">
+                <input id="r-nav-input" type="checkbox" class="r-nav-hidden">
+                <label class="r-nav-open" for="r-nav-input"><span class="r-nav-icon" data-feather="menu"></span></label>
+                <label class="r-nav-close r-nav-hidden" for="r-nav-input"></label>
+                <div class="r-nav-menu-content flex-c">
+
+                  <div class="drawer-user-container">
+                    {% if user.id %}
+                    <img id="icon-preview" src="{{ user.icon_big.url }}" alt="icon">
+                    <p>@{{ user.get_username }}</p>
+                    {% else %}
+                    <img id="icon-preview" src="/media/icons/default.png" alt="icon">
+                    <p>Guest</p>
+                    {% endif %}
+                  </div>
+
+                  {% if user.id %}
+                  <a class="drawer-item deco-none" href="{% url 'notes:logout' %}">
+                    <span class="drawer-icon" data-feather="log-out"></span>Log out
+                  </a>
+                  {% else %}
+                  <a class="drawer-item deco-none" href="{% url 'notes:login' %}">
+                    <span class="drawer-icon" data-feather="log-in"></span>Sign in
+                  </a>
+                  <a class="drawer-item deco-none" href="{% url 'notes:signup' %}">
+                    <span class="drawer-icon" data-feather="edit-3"></span>Sign up
+                  </a>
+                  {% endif %}
+
+                </div>
+              </div>
+            </div>
           </div>
           {% block content_header %}{% endblock content_header %}
           {% block content %}{% endblock content %}
 
           {% if user.id %}
-          <div class="edit-btn">
+          <div class="edit-btn {% block edit-btn-hidden %}{% endblock edit-btn-hidden %}">
             <a class="deco-none blue" href="{% url 'notes:post_note' %}">
-              <span class="fa" data-feather="edit"></span>
+              <span class="fa edit-feather" data-feather="edit"></span>
             </a>
           </div>
           {% endif %}

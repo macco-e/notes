@@ -1,5 +1,4 @@
-from django.contrib import admin
-from django.urls import include, path
+from django.urls import path
 
 from .views import sign_up_view, create_user, login_view, HomeView, logout_view, PostNoteView, SettingsView, follow, unfollow
 from .views import NoteDetailView, delete_note, NoteUpdateView, redirect_to_home

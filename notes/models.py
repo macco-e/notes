@@ -7,7 +7,7 @@ from markdown import markdown
 
 
 class Account(AbstractUser):
-    icon = models.ImageField(upload_to='icons', blank=True, default='icons/default.png')
+    icon = models.ImageField(upload_to='icons/', blank=True, default='icons/default.png')
 
     icon_small = ImageSpecField(
         source='icon',

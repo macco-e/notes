@@ -23,16 +23,20 @@ show-none
 Settings
 {% endblock content_title %}
 
+{% block edit-btn-hidden %}
+hidden
+{% endblock edit-btn-hidden %}
+
 {% block content %}
 <div class="settings-container flex-r">
 
   <div class="settings-left sub-container">
-
     <div class="form-group">
-      <form class="settings-form" action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+      <form class="settings-form" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <label>Icon</label>
         <img id="icon-preview" src="{{ user.icon_big.url }}" alt="icon">
         <input type="file" name="icon" onchange="preview_img(this);">
+        <input type="hidden" name="username" value="{{ user.get_username }}">
         <button type="submit" class="btn form-btn">Save</button>
       </form>
       <script type="text/javascript">
