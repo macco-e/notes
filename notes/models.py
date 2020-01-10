@@ -7,7 +7,9 @@ from markdown import markdown
 
 
 class Account(AbstractUser):
-    icon = models.ImageField(upload_to='icons/', blank=True, default='icons/default.png')
+    icon = models.ImageField(
+        upload_to='icons/', blank=True, default='icons/default.png'
+    )
 
     icon_small = ImageSpecField(
         source='icon',
@@ -32,10 +34,12 @@ class Account(AbstractUser):
 
 
 class Follow(models.Model):
-    follow = models.ForeignKey(Account, on_delete=models.CASCADE,
-                                  related_name='follow_id')
-    follower = models.ForeignKey(Account, on_delete=models.CASCADE,
-                                    related_name='follower_id')
+    follow = models.ForeignKey(
+        Account, on_delete=models.CASCADE, related_name='follow_id'
+    )
+    follower = models.ForeignKey(
+        Account, on_delete=models.CASCADE, related_name='follower_id'
+    )
 
     def __str__(self):
         return f'{self.follow.username}-{self.follower.username}'
@@ -57,7 +61,10 @@ class Notes(models.Model):
         # fenced_code - ```code```
         # nl2br - new line to break
         # https://python-markdown.github.io/reference/
-        return mark_safe(markdown(self.text, extensions=['fenced_code', 'attr_list', 'nl2br'], safe_mode='escape'))
+        return mark_safe(markdown(
+            self.text, extensions=['fenced_code', 'attr_list', 'nl2br'],
+            safe_mode='escape'
+        ))
 
     def get_format_created_at(self):
         return self.created_at.strftime("%Y-%m-%d %H:%M:%S")
