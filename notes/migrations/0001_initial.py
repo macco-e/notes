@@ -10,8 +10,6 @@ import django.utils.timezone
 
 class Migration(migrations.Migration):
 
-    replaces = [('notes', '0001_initial'), ('notes', '0002_auto_20190930_1401'), ('notes', '0003_auto_20190930_1402'), ('notes', '0004_auto_20190930_1516'), ('notes', '0005_auto_20190930_1517'), ('notes', '0006_auto_20191002_0740'), ('notes', '0007_auto_20191002_0918'), ('notes', '0008_auto_20191002_1337'), ('notes', '0009_auto_20191003_0957'), ('notes', '0010_auto_20191003_1247'), ('notes', '0011_auto_20191003_1333'), ('notes', '0012_auto_20191031_1759'), ('notes', '0013_auto_20200109_2100')]
-
     dependencies = [
         ('auth', '0011_update_proxy_permissions'),
     ]

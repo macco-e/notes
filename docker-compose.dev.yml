@@ -22,7 +22,7 @@ services:
     env_file:
       - ./env/.env.db
     volumes:
-      - ../db/gmysql/:/var/lib/mysql
+      - ../db/mysql/:/var/lib/mysql
       - ./mysql/my.cnf:/etc/my.cnf
 
 volumes:
