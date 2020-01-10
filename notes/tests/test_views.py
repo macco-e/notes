@@ -129,8 +129,7 @@ class TestLogout(TestCase):
 
         # GET /home without logged in
         response = self.client.get(reverse('notes:home'))
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/login/?next=/home/')
+        self.assertEqual(response.status_code, 200)
 
 
 class TestHomeView(TestCase):
@@ -156,8 +155,7 @@ class TestHomeView(TestCase):
     def test_home_view_without_logged_in(self):
         """GET URL without logged in"""
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/login/?next=/home/')
+        self.assertEqual(response.status_code, 200)
 
     def test_home_view_display_notes(self):
         """
@@ -236,8 +234,7 @@ class TestNotesView(TestCase):
     def test_notes_view_without_logged_in(self):
         """GET URL without logged in"""
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/login/?next=/notes/')
+        self.assertEqual(response.status_code, 200)
 
     def test_notes_view_display_notes(self):
         """
@@ -301,8 +298,7 @@ class TestUsersView(TestCase):
     def test_users_view_without_logged_in(self):
         """GET URL without logged in"""
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/login/?next=/users/')
+        self.assertEqual(response.status_code, 200)
 
     def test_users_view_get_users(self):
         """Get all users"""
@@ -349,8 +345,7 @@ class TestUserView(TestCase):
         url = reverse('notes:user_page', args=(self.u1.pk,))
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, f'/login/?next=/user/{self.u1.pk}')
+        self.assertEqual(response.status_code, 200)
 
     def test_user_view_get_target_user(self):
         """Get target user of target page"""
@@ -456,9 +451,7 @@ class TestUserFollowView(TestCase):
         """GET URL without logged in"""
         url = reverse('notes:user_follow_list', args=(self.u1.pk,))
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response,
-                             f'/login/?next=/user/{self.u1.pk}/follow')
+        self.assertEqual(response.status_code, 200)
 
     def test_user_follow_view_get_accounts_list(self):
         """Get follow account list of target user"""
@@ -510,9 +503,7 @@ class TestUserFollowerView(TestCase):
         """GET URL without logged in"""
         url = reverse('notes:user_follower_list', args=(self.u1.pk,))
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response,
-                             f'/login/?next=/user/{self.u1.pk}/follower')
+        self.assertEqual(response.status_code, 200)
 
     def test_user_follower_view_get_accounts_list(self):
         """Get follower account list of target user"""

@@ -36,7 +36,5 @@ services:
     env_file:
       - ./env/.env.db
     volumes:
-      - dbdata_volume:/var/lib/mysql
-
-volumes:
-  dbdata_volume:
+      - ../db/mysql/:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/my.cnf
